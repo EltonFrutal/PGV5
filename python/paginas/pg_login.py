@@ -10,7 +10,7 @@ def gerar():
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PGV5 - Login</title>
+<title>Painel Gerencial</title>
 
 <!-- Favicon e ícones -->
 <link rel="icon" type="image/png" sizes="32x32" href="imagem/logos/sistema.png">

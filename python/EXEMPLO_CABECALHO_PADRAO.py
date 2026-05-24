@@ -13,13 +13,17 @@ FUNÇÕES REUTILIZÁVEIS NO UTILS.PY:
    
 3. gerar_subnav(pagina_ativa='dash', dash_arq='', lista_arq='', filtros_html='')
    → Submenu (Dashboard/Listagem/Filtros)
+
+4. TITULO_PADRAO
+   → Constante com título padrão: "Painel Gerencial"
+   → SEMPRE use essa constante no <title>!
 """
 
 # ============================================================
 #  EXEMPLO 1: Página de Dashboard
 # ============================================================
 
-from utils import css_base, gerar_meta_icons, gerar_cabecalho, gerar_subnav
+from utils import css_base, gerar_meta_icons, gerar_cabecalho, gerar_subnav, TITULO_PADRAO
 
 def gerar_compras_dash(emp, dados):
     """Exemplo: Dashboard de Compras"""
@@ -33,7 +37,7 @@ def gerar_compras_dash(emp, dados):
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>{nome} — Compras Dashboard</title>
+<title>{TITULO_PADRAO}</title>
 {gerar_meta_icons(path_raiz='../../')}
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest"></script>

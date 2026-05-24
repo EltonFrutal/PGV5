@@ -9,6 +9,7 @@ from config import REPO_PATH
 
 # Constantes
 FONT_FAMILY = "'Plus Jakarta Sans', sans-serif"
+TITULO_PADRAO = "Painel Gerencial"  # Título padrão para TODAS as páginas
 
 
 def gerar_meta_icons(path_raiz=''):
