@@ -1,0 +1,38 @@
+{
+  "1_61": {
+    "exibevendas": "sim",
+    "exibecompras": "sim",
+    "exibeareceber": "não",
+    "exibeapagar": "não",
+    "exibehistoricos": "sim",
+    "exibeindicadores": "sim",
+    "exiberesultados": "sim"
+  },
+  "1_811": {
+    "exibevendas": "sim",
+    "exibecompras": "sim",
+    "exibeareceber": "sim",
+    "exibeapagar": "sim",
+    "exibehistoricos": "sim",
+    "exibeindicadores": "sim",
+    "exiberesultados": "sim"
+  },
+  "1_5": {
+    "exibevendas": "sim",
+    "exibecompras": "sim",
+    "exibeareceber": "sim",
+    "exibeapagar": "sim",
+    "exibehistoricos": "sim",
+    "exibeindicadores": "sim",
+    "exiberesultados": "sim"
+  },
+  "2_811": {
+    "exibevendas": "sim",
+    "exibecompras": "não",
+    "exibeareceber": "sim",
+    "exibeapagar": "sim",
+    "exibehistoricos": "sim",
+    "exibeindicadores": "sim",
+    "exiberesultados": "sim"
+  }
+}

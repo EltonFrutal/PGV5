@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Retifica Lima &mdash; Vendas Listagem</title>
+
+<!-- Favicon e ícones -->
+<link rel="icon" type="image/png" sizes="32x32" href="../../imagem/logos/sistema.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../../imagem/logos/sistema.png">
+<link rel="apple-touch-icon" sizes="180x180" href="../../imagem/logos/sistema.png">
+<link rel="manifest" href="../../manifest.json">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PGV5">
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{background:#e2e8f0;color:#1e293b;font-family:'Plus Jakarta Sans',sans-serif;min-height:100vh;}
+.hdr-main{background:#000;border-bottom:1px solid #1e293b;padding:0 28px;height:58px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.3);}
+.hdr-menu-btn{background:transparent;border:1.5px solid #334155;border-radius:8px;color:#94a3b8;
+  padding:8px;cursor:pointer;text-decoration:none;transition:all .2s;display:flex;align-items:center;
+  justify-content:center;width:38px;height:38px;}
+.hdr-menu-btn:hover{border-color:#fff;color:#fff;background:rgba(255,255,255,.1);}
+.hdr-menu-btn svg{display:block;}
+.hdr-right{display:flex;align-items:center;gap:12px;}
+.hdr-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);
+  display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;color:#fff;overflow:hidden;}
+.hdr-avatar img{max-width:36px !important;max-height:36px !important;}
+.btn-trocar-org{background:transparent;border:1.5px solid #334155;border-radius:8px;color:#94a3b8;
+  padding:8px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;
+  width:38px;height:38px;text-decoration:none;}
+.btn-trocar-org:hover{border-color:#fff;color:#fff;background:rgba(255,255,255,.1);}
+.btn-trocar-org svg{display:block;}
+.btn-logoff{background:transparent;border:1.5px solid #334155;border-radius:7px;color:#94a3b8;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:.75rem;font-weight:600;padding:8px 12px;cursor:pointer;
+  transition:all .2s;display:flex;align-items:center;}
+.btn-logoff:hover{border-color:#ef4444;color:#ef4444;background:rgba(239,68,68,.1);}
+.btn-logoff svg{display:block;}
+.hdr-sub{background:#fff;border-bottom:1px solid #e2e8f0;padding:0 28px;height:50px;
+  display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+.subnav-btn{background:transparent;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:.82rem;
+  font-weight:600;color:#64748b;padding:6px 14px;border-radius:6px;cursor:pointer;text-decoration:none;transition:all .2s;}
+.subnav-btn:hover{background:#f1f5f9;color:#1e293b;}
+.subnav-btn.active{background:#0ea5e915;color:#0ea5e9;}
+.sub-div{width:1px;height:20px;background:#e2e8f0;}
+.filtro-wrap{display:flex;align-items:center;gap:8px;margin-left:auto;flex-wrap:wrap;}
+.filtro-label{font-size:.7rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;}
+.filtro-select{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:7px;color:#334155;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:.82rem;font-weight:500;padding:5px 10px;outline:none;cursor:pointer;transition:border-color .2s;}
+.filtro-select:focus{border-color:#0ea5e9;}
+.filtro-nav-btn{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:6px;color:#475569;
+  font-size:.78rem;font-weight:700;padding:5px 9px;cursor:pointer;transition:all .2s;font-family:'Plus Jakarta Sans',sans-serif;}
+.filtro-nav-btn:hover{border-color:#0ea5e9;color:#0ea5e9;background:#fff;}
+main{padding:22px 28px 48px;}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px;}
+.kpi-card{background:#fff;border:1px solid #e8ecf4;border-radius:14px;padding:6px 8px;
+  position:relative;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.05);transition:box-shadow .2s;}
+.kpi-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.09);}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--kc,#0ea5e9);}
+.kpi-titulo{font-size:.72rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;}
+.kpi-valor{font-size:1.9rem;font-weight:800;color:#0f172a;letter-spacing:-.04em;line-height:1;margin-bottom:6px;}
+.kpi-var{font-size:.8rem;font-weight:700;}
+.kpi-footer{display:flex;justify-content:space-between;margin-top:10px;padding-top:10px;
+  border-top:1px solid #f1f5f9;font-size:.7rem;color:#94a3b8;font-weight:500;}
+.prog-bar{height:4px;background:#f1f5f9;border-radius:3px;margin-top:10px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:3px;}
+.kpi-ph{background:#fff;border:2px dashed #e2e8f0;border-radius:14px;padding:18px 20px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:120px;}
+.kpi-ph .ph-t{font-size:.72rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;}
+.kpi-ph .ph-m{font-size:.7rem;color:#cbd5e1;line-height:1.6;}
+.chart-row{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;margin-bottom:16px;}
+.chart-card{background:#fff;border:1px solid #e8ecf4;border-radius:14px;padding:4px;box-shadow:0 1px 3px rgba(0,0,0,.05);}
+.chart-titulo{font-size:.9rem;font-weight:800;color:#0f172a;letter-spacing:-.02em;}
+.chart-sub{font-size:.7rem;color:#94a3b8;font-weight:500;margin-top:3px;}
+.chart-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;}
+.chart-leg{display:flex;gap:12px;flex-wrap:wrap;}
+.leg-i{display:flex;align-items:center;gap:5px;font-size:.68rem;color:#64748b;font-weight:500;}
+.leg-d{width:10px;height:10px;border-radius:2px;}
+.chart-wrap{position:relative;height:220px;}
+.kpi2-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.kpi2-card{background:#fff;border:1px solid #e8ecf4;border-radius:14px;padding:6px 8px;box-shadow:0 1px 3px rgba(0,0,0,.05);}
+.kpi2-titulo{font-size:.7rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px;}
+.kpi2-vals{display:flex;align-items:flex-end;gap:14px;margin-bottom:6px;}
+.kpi2-v{font-size:1.7rem;font-weight:800;letter-spacing:-.04em;}
+.kpi2-v.sec{font-size:1.3rem;color:#94a3b8;}
+.kpi2-vr{font-size:1rem;font-weight:800;}
+.kpi2-labs{display:flex;gap:14px;font-size:.65rem;color:#94a3b8;font-weight:500;}
+.kpi2-ph{background:#fff;border:2px dashed #e2e8f0;border-radius:14px;padding:18px 20px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.kpi-card,.kpi2-card,.chart-card,.kpi-ph,.kpi2-ph{animation:fadeUp .4s ease both;}
+@media(max-width:900px){
+  .kpi-row,.kpi2-row{grid-template-columns:repeat(2,1fr);}
+  .chart-row{grid-template-columns:1fr;}
+  main{padding:16px;}
+  .hdr-main,.hdr-sub{padding:0 16px;}
+}
+@media(max-width:768px){
+  .hdr-main > div:first-child > span{display:none !important;}
+  .btn-logoff{width:36px;height:36px;padding:8px;}
+  .btn-logoff span{display:none;}
+  .btn-logoff svg{width:20px;height:20px;}
+}
+
+body{display:block;}
+</style>
+</head>
+<body>
+
+<style>
+
+.hdr-main{background:#000;border-bottom:1px solid #1e293b;padding:0 28px;height:58px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.3);}
+.hdr-left{display:flex;align-items:center;gap:16px;}
+.hdr-menu-btn{background:transparent;border:1.5px solid #334155;border-radius:8px;color:#94a3b8;
+  padding:8px;cursor:pointer;text-decoration:none;transition:all .2s;display:flex;align-items:center;
+  justify-content:center;width:38px;height:38px;opacity:0.3;pointer-events:none;}
+.hdr-logo{height:34px;}
+.hdr-titulo{color:#fff;font-weight:700;font-size:1.1rem;letter-spacing:-.02em;}
+.hdr-right{display:flex;align-items:center;gap:12px;}
+.hdr-empresa-logo{height:32px;margin-right:8px;border:2px solid #fff;border-radius:8px;padding:2px;background:#fff;}
+.hdr-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);
+  display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;color:#fff;overflow:hidden;
+  border:2px solid #fff;}
+.hdr-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.btn-trocar-org{background:transparent;border:1.5px solid #334155;border-radius:8px;color:#94a3b8;
+  padding:8px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;
+  width:38px;height:38px;text-decoration:none;}
+.btn-trocar-org:hover{border-color:#fff;color:#fff;background:rgba(255,255,255,.1);}
+.btn-trocar-org svg{display:block;}
+.btn-logoff{background:transparent;border:1.5px solid #334155;border-radius:7px;color:#94a3b8;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:.75rem;font-weight:600;padding:8px 12px;cursor:pointer;
+  transition:all .2s;display:flex;align-items:center;}
+.btn-logoff:hover{border-color:#ef4444;color:#ef4444;background:rgba(239,68,68,.1);}
+.btn-logoff svg{display:block;}
+
+@media(max-width:768px){
+  .hdr-titulo{display:none !important;}
+  .btn-logoff{width:36px;height:36px;padding:8px;}
+  .btn-logoff span{display:none;}
+  .btn-logoff svg{width:20px;height:20px;}
+}
+
+</style>
+
+<header class="hdr-main">
+  <div class="hdr-left">
+    <button class="hdr-menu-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
+    <img src="../../imagem/logos/sistema.png" alt="PGV5" class="hdr-logo" onerror="this.style.display='none'">
+    <span class="hdr-titulo">Painel Gerencial</span>
+  </div>
+  <div class="hdr-right">
+    <img src="../../imagem/logos/retificalima.png" class="hdr-empresa-logo" onerror="this.style.display='none'">
+    <div class="hdr-avatar" id="hdr-avatar">?</div>
+    <a href="../../empresas.html" class="btn-trocar-org" title="Trocar Organização">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"></path><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"></path><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"></path><path d="M10 6h4"></path><path d="M10 10h4"></path><path d="M10 14h4"></path><path d="M10 18h4"></path></svg>
+    </a>
+    <button class="btn-logoff" onclick="sair()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+      <span style="margin-left:6px">Sair</span>
+    </button>
+  </div>
+</header>
+
+<script>
+// Carregar avatar do usuário
+(function(){
+  var usuarioId = localStorage.getItem('pgv5_usuario_id');
+  var usuarioNome = localStorage.getItem('pgv5_usuario_nome');
+  var usuarioFoto = localStorage.getItem('pgv5_usuario_foto');
+  
+  if(!usuarioId){
+    window.location.href = '../../index.html';
+    return;
+  }
+  
+  var avatar = document.getElementById('hdr-avatar');
+  if(usuarioFoto){
+    var img = document.createElement('img');
+    img.src = '../../' + usuarioFoto;
+    img.style.width = '100%';
+    img.style.height = '100%';
+    img.style.objectFit = 'cover';
+    img.style.borderRadius = '50%';
+    img.onerror = function() {
+      avatar.textContent = usuarioNome ? usuarioNome.charAt(0).toUpperCase() : 'U';
+    };
+    avatar.innerHTML = '';
+    avatar.appendChild(img);
+  } else if(usuarioNome){
+    avatar.textContent = usuarioNome.charAt(0).toUpperCase();
+  }
+})();
+
+function sair(){
+  localStorage.clear();
+  window.location.href = '../../index.html';
+}
+</script>
+
+<div class="hdr-sub">
+  <a href="vendas_dash.html" class="subnav-btn ">Dashboard</a>
+  <a href="vendas_lista.html" class="subnav-btn active">Listagem</a>
+  
+</div>
+
+<main style="max-width:1400px;margin:0 auto;padding:40px;background:#f1f5f9;min-height:100vh;">
+<h1 style="font-size:1.8rem;font-weight:900;color:#0f172a;letter-spacing:-.03em;margin-bottom:8px;">Listagem</h1>
+<p style="font-size:.85rem;color:#64748b;font-weight:500;">Em desenvolvimento...</p>
+</main>
+<script>
+lucide.createIcons();
+</script>
+</body></html>

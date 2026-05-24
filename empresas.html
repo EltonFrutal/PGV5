@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>PGV5 — Selecione a Organização</title>
+
+<!-- Favicon e ícones -->
+<link rel="icon" type="image/png" sizes="32x32" href="imagem/logos/sistema.png">
+<link rel="icon" type="image/png" sizes="16x16" href="imagem/logos/sistema.png">
+<link rel="apple-touch-icon" sizes="180x180" href="imagem/logos/sistema.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PGV5">
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;margin:0;}
+body{background:#e2e8f0;color:#1e293b;font-family:'Plus Jakarta Sans',sans-serif;min-height:100vh;}
+
+/* Conteúdo */
+.main-content{padding:28px;}
+.sec-titulo{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#94a3b8;margin-bottom:16px;}
+.emp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:20px;max-width:1000px;}
+.emp-card{background:#fff;border:1.5px solid #f1f5f9;border-radius:16px;padding:32px 20px;cursor:pointer;text-decoration:none;display:flex;flex-direction:column;align-items:center;text-align:center;transition:all .25s;box-shadow:0 1px 3px rgba(0,0,0,.06);}
+.emp-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.1);}
+.emp-icone{width:64px;height:64px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;background:#f1f5f9;}
+.emp-icone img{width:100%;height:100%;object-fit:contain;}
+.emp-nome-card{font-size:.9rem;font-weight:700;color:#1e293b;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.emp-card{animation:fadeUp .4s ease both;}
+</style>
+</head>
+<body>
+
+
+<style>
+
+.hdr-main{background:#000;border-bottom:1px solid #1e293b;padding:0 28px;height:58px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.3);}
+.hdr-left{display:flex;align-items:center;gap:16px;}
+.hdr-menu-btn{background:transparent;border:1.5px solid #334155;border-radius:8px;color:#94a3b8;
+  padding:8px;cursor:pointer;text-decoration:none;transition:all .2s;display:flex;align-items:center;
+  justify-content:center;width:38px;height:38px;opacity:0.3;pointer-events:none;}
+.hdr-logo{height:34px;}
+.hdr-titulo{color:#fff;font-weight:700;font-size:1.1rem;letter-spacing:-.02em;}
+.hdr-right{display:flex;align-items:center;gap:12px;}
+.hdr-empresa-logo{height:32px;margin-right:8px;border:2px solid #fff;border-radius:8px;padding:2px;background:#fff;}
+.hdr-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);
+  display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;color:#fff;overflow:hidden;
+  border:2px solid #fff;}
+.hdr-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.btn-trocar-org{background:transparent;border:1.5px solid #334155;border-radius:8px;color:#94a3b8;
+  padding:8px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;
+  width:38px;height:38px;text-decoration:none;}
+.btn-trocar-org:hover{border-color:#fff;color:#fff;background:rgba(255,255,255,.1);}
+.btn-trocar-org svg{display:block;}
+.btn-logoff{background:transparent;border:1.5px solid #334155;border-radius:7px;color:#94a3b8;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:.75rem;font-weight:600;padding:8px 12px;cursor:pointer;
+  transition:all .2s;display:flex;align-items:center;}
+.btn-logoff:hover{border-color:#ef4444;color:#ef4444;background:rgba(239,68,68,.1);}
+.btn-logoff svg{display:block;}
+
+@media(max-width:768px){
+  .hdr-titulo{display:none !important;}
+  .btn-logoff{width:36px;height:36px;padding:8px;}
+  .btn-logoff span{display:none;}
+  .btn-logoff svg{width:20px;height:20px;}
+}
+
+</style>
+
+<header class="hdr-main">
+  <div class="hdr-left">
+    <button class="hdr-menu-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
+    <img src="imagem/logos/sistema.png" alt="PGV5" class="hdr-logo" onerror="this.style.display='none'">
+    <span class="hdr-titulo">Painel Gerencial</span>
+  </div>
+  <div class="hdr-right">
+    
+    <div class="hdr-avatar" id="hdr-avatar">?</div>
+    
+    <button class="btn-logoff" onclick="sair()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+      <span style="margin-left:6px">Sair</span>
+    </button>
+  </div>
+</header>
+
+<script>
+// Carregar avatar do usuário
+(function(){
+  var usuarioId = localStorage.getItem('pgv5_usuario_id');
+  var usuarioNome = localStorage.getItem('pgv5_usuario_nome');
+  var usuarioFoto = localStorage.getItem('pgv5_usuario_foto');
+  
+  if(!usuarioId){
+    window.location.href = 'index.html';
+    return;
+  }
+  
+  var avatar = document.getElementById('hdr-avatar');
+  if(usuarioFoto){
+    var img = document.createElement('img');
+    img.src = '' + usuarioFoto;
+    img.style.width = '100%';
+    img.style.height = '100%';
+    img.style.objectFit = 'cover';
+    img.style.borderRadius = '50%';
+    img.onerror = function() {
+      avatar.textContent = usuarioNome ? usuarioNome.charAt(0).toUpperCase() : 'U';
+    };
+    avatar.innerHTML = '';
+    avatar.appendChild(img);
+  } else if(usuarioNome){
+    avatar.textContent = usuarioNome.charAt(0).toUpperCase();
+  }
+})();
+
+function sair(){
+  localStorage.clear();
+  window.location.href = 'index.html';
+}
+</script>
+
+
+<div class="main-content">
+  <div class="sec-titulo">Selecione a Organização</div>
+  <div class="emp-grid">
+
+  <a class="emp-card" href="empresa/multicar/menu.html" style="animation-delay:0.0s">
+    <div class="emp-icone">
+      <img src="imagem/logos/multicar.png" alt="Multicar" onerror="this.outerHTML='<div style=\'font-size:2rem\'>🏢</div>'">
+    </div>
+    <div class="emp-nome-card">Multicar</div>
+  </a>
+
+  <a class="emp-card" href="empresa/cocacafe/menu.html" style="animation-delay:0.08s">
+    <div class="emp-icone">
+      <img src="imagem/logos/cocacafe.png" alt="Coca Café" onerror="this.outerHTML='<div style=\'font-size:2rem\'>🏢</div>'">
+    </div>
+    <div class="emp-nome-card">Coca Café</div>
+  </a>
+
+  <a class="emp-card" href="empresa/retificalima/menu.html" style="animation-delay:0.16s">
+    <div class="emp-icone">
+      <img src="imagem/logos/retificalima.png" alt="Retifica Lima" onerror="this.outerHTML='<div style=\'font-size:2rem\'>🏢</div>'">
+    </div>
+    <div class="emp-nome-card">Retifica Lima</div>
+  </a>
+
+  </div>
+</div>
+
+</body>
+</html>

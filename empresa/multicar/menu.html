@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Multicar &mdash; PGV5</title>
+
+<!-- Favicon e ícones -->
+<link rel="icon" type="image/png" sizes="32x32" href="../imagem/logos/sistema.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../imagem/logos/sistema.png">
+<link rel="apple-touch-icon" sizes="180x180" href="../imagem/logos/sistema.png">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PGV5">
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{background:#e2e8f0;color:#1e293b;font-family:'Plus Jakarta Sans',sans-serif;min-height:100vh;display:block;}
+
+/* Conteúdo */
+main{padding:22px 28px 48px;max-width:1000px;margin:0 auto;}
+.page-titulo{font-size:1.8rem;font-weight:900;color:#0f172a;letter-spacing:-.03em;margin-bottom:8px;}
+.page-desc{font-size:.85rem;color:#64748b;font-weight:500;margin-bottom:32px;}
+
+/* Grid de Módulos */
+.mod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;}
+.mod-card{background:#fff;border:1px solid #e8ecf4;border-radius:12px;padding:20px 16px;
+  text-align:center;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;
+  box-shadow:0 1px 3px rgba(0,0,0,.05);text-decoration:none;display:block;}
+.mod-card:hover{transform:translateY(-4px);box-shadow:0 12px 24px rgba(0,0,0,.12);border-color:#10b981;}
+.mod-card.inativo{opacity:0.5;cursor:not-allowed;background:#f8fafc;}
+.mod-card.inativo:hover{transform:none;box-shadow:0 1px 3px rgba(0,0,0,.05);}
+.mod-icon{width:48px;height:48px;margin:0 auto 14px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;background:#10b98115;}
+.mod-icon i{color:#10b981;}
+.mod-titulo{font-size:.95rem;font-weight:800;color:#0f172a;letter-spacing:-.02em;text-transform:uppercase;}
+.mod-lock{position:absolute;top:10px;right:10px;width:28px;height:28px;
+  background:rgba(239,68,68,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;
+  color:#ef4444;}
+
+/* Animações */
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.mod-card{animation:fadeIn .5s ease both;}
+
+/* Responsivo */
+@media(max-width:900px){
+  .mod-grid{grid-template-columns:repeat(2,1fr);gap:14px;}
+  main{padding:16px;}
+}
+</style>
+</head>
+<body>
+
+
+<style>
+
+.hdr-main{background:#000;border-bottom:1px solid #1e293b;padding:0 28px;height:58px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.3);}
+.hdr-left{display:flex;align-items:center;gap:16px;}
+.hdr-menu-btn{background:transparent;border:1.5px solid #334155;border-radius:8px;color:#94a3b8;
+  padding:8px;cursor:pointer;text-decoration:none;transition:all .2s;display:flex;align-items:center;
+  justify-content:center;width:38px;height:38px;opacity:0.3;pointer-events:none;}
+.hdr-logo{height:34px;}
+.hdr-titulo{color:#fff;font-weight:700;font-size:1.1rem;letter-spacing:-.02em;}
+.hdr-right{display:flex;align-items:center;gap:12px;}
+.hdr-empresa-logo{height:32px;margin-right:8px;border:2px solid #fff;border-radius:8px;padding:2px;background:#fff;}
+.hdr-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);
+  display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;color:#fff;overflow:hidden;
+  border:2px solid #fff;}
+.hdr-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.btn-trocar-org{background:transparent;border:1.5px solid #334155;border-radius:8px;color:#94a3b8;
+  padding:8px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;
+  width:38px;height:38px;text-decoration:none;}
+.btn-trocar-org:hover{border-color:#fff;color:#fff;background:rgba(255,255,255,.1);}
+.btn-trocar-org svg{display:block;}
+.btn-logoff{background:transparent;border:1.5px solid #334155;border-radius:7px;color:#94a3b8;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:.75rem;font-weight:600;padding:8px 12px;cursor:pointer;
+  transition:all .2s;display:flex;align-items:center;}
+.btn-logoff:hover{border-color:#ef4444;color:#ef4444;background:rgba(239,68,68,.1);}
+.btn-logoff svg{display:block;}
+
+@media(max-width:768px){
+  .hdr-titulo{display:none !important;}
+  .btn-logoff{width:36px;height:36px;padding:8px;}
+  .btn-logoff span{display:none;}
+  .btn-logoff svg{width:20px;height:20px;}
+}
+
+</style>
+
+<header class="hdr-main">
+  <div class="hdr-left">
+    <button class="hdr-menu-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
+    <img src="../../imagem/logos/sistema.png" alt="PGV5" class="hdr-logo" onerror="this.style.display='none'">
+    <span class="hdr-titulo">Painel Gerencial</span>
+  </div>
+  <div class="hdr-right">
+    <img src="../../imagem/logos/multicar.png" class="hdr-empresa-logo" onerror="this.style.display='none'">
+    <div class="hdr-avatar" id="hdr-avatar">?</div>
+    <a href="../../empresas.html" class="btn-trocar-org" title="Trocar Organização">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"></path><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"></path><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"></path><path d="M10 6h4"></path><path d="M10 10h4"></path><path d="M10 14h4"></path><path d="M10 18h4"></path></svg>
+    </a>
+    <button class="btn-logoff" onclick="sair()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+      <span style="margin-left:6px">Sair</span>
+    </button>
+  </div>
+</header>
+
+<script>
+// Carregar avatar do usuário
+(function(){
+  var usuarioId = localStorage.getItem('pgv5_usuario_id');
+  var usuarioNome = localStorage.getItem('pgv5_usuario_nome');
+  var usuarioFoto = localStorage.getItem('pgv5_usuario_foto');
+  
+  if(!usuarioId){
+    window.location.href = '../../index.html';
+    return;
+  }
+  
+  var avatar = document.getElementById('hdr-avatar');
+  if(usuarioFoto){
+    var img = document.createElement('img');
+    img.src = '../../' + usuarioFoto;
+    img.style.width = '100%';
+    img.style.height = '100%';
+    img.style.objectFit = 'cover';
+    img.style.borderRadius = '50%';
+    img.onerror = function() {
+      avatar.textContent = usuarioNome ? usuarioNome.charAt(0).toUpperCase() : 'U';
+    };
+    avatar.innerHTML = '';
+    avatar.appendChild(img);
+  } else if(usuarioNome){
+    avatar.textContent = usuarioNome.charAt(0).toUpperCase();
+  }
+})();
+
+function sair(){
+  localStorage.clear();
+  window.location.href = '../../index.html';
+}
+</script>
+
+
+<main>
+  <h1 class="page-titulo">Multicar</h1>
+  <p class="page-desc">Selecione um módulo para começar</p>
+  <div class="mod-grid" id="mod-grid">
+<a href="vendas_dash.html" class="mod-card" style="animation-delay:0.0s" data-modulo="vendas">
+    <div class="mod-icon"><i data-lucide="trending-up" style="width:36px;height:36px"></i></div>
+    <div class="mod-titulo">Vendas</div>
+  </a>
+<a href="compras_dash.html" class="mod-card" style="animation-delay:0.05s" data-modulo="compras">
+    <div class="mod-icon"><i data-lucide="shopping-cart" style="width:36px;height:36px"></i></div>
+    <div class="mod-titulo">Compras</div>
+  </a>
+<a href="areceber_dash.html" class="mod-card" style="animation-delay:0.1s" data-modulo="areceber">
+    <div class="mod-icon"><i data-lucide="arrow-down-to-line" style="width:36px;height:36px"></i></div>
+    <div class="mod-titulo">A Receber</div>
+  </a>
+<a href="apagar_dash.html" class="mod-card" style="animation-delay:0.15000000000000002s" data-modulo="apagar">
+    <div class="mod-icon"><i data-lucide="arrow-up-from-line" style="width:36px;height:36px"></i></div>
+    <div class="mod-titulo">A Pagar</div>
+  </a>
+<a href="historicos_dash.html" class="mod-card" style="animation-delay:0.2s" data-modulo="historicos">
+    <div class="mod-icon"><i data-lucide="history" style="width:36px;height:36px"></i></div>
+    <div class="mod-titulo">Históricos</div>
+  </a>
+<a href="indicadores_dash.html" class="mod-card" style="animation-delay:0.25s" data-modulo="indicadores">
+    <div class="mod-icon"><i data-lucide="gauge" style="width:36px;height:36px"></i></div>
+    <div class="mod-titulo">Indicadores</div>
+  </a>
+<a href="resultados_dash.html" class="mod-card" style="animation-delay:0.30000000000000004s" data-modulo="resultados">
+    <div class="mod-icon"><i data-lucide="pie-chart" style="width:36px;height:36px"></i></div>
+    <div class="mod-titulo">Resultados</div>
+  </a>
+
+  </div>
+</main>
+
+<script>
+// Carregar permissões dinamicamente
+(async function(){
+  var usuarioId = localStorage.getItem('pgv5_usuario_id');
+  var empresaId = '61';
+  
+  if(!usuarioId){
+    window.location.href = '../index.html';
+    return;
+  }
+  
+  // Carregar permissões do JSON
+  try {
+    const response = await fetch('/permissoes.json');
+    const permissoes = await response.json();
+    const chave = usuarioId + '_' + empresaId;
+    const userPerms = permissoes[chave];
+    
+    console.log('🔐 Permissões carregadas:');
+    console.log('   Usuário ID:', usuarioId);
+    console.log('   Empresa ID:', empresaId);
+    console.log('   Chave:', chave);
+    console.log('   Permissões:', userPerms);
+    
+    if(userPerms){
+      // Aplicar permissões aos cards
+      const modulos = [
+        {id: 'vendas', perm: userPerms.exibevendas},
+        {id: 'compras', perm: userPerms.exibecompras},
+        {id: 'areceber', perm: userPerms.exibeareceber},
+        {id: 'apagar', perm: userPerms.exibeapagar},
+        {id: 'historicos', perm: userPerms.exibehistoricos},
+        {id: 'indicadores', perm: userPerms.exibeindicadores},
+        {id: 'resultados', perm: userPerms.exiberesultados}
+      ];
+      
+      console.log('📋 Aplicando permissões aos módulos:');
+      modulos.forEach(mod => {
+        console.log(`   ${mod.id}: ${mod.perm}`);
+        const cards = document.querySelectorAll('a[href*="' + mod.id + '"]');
+        cards.forEach(card => {
+          if(mod.perm === 'não'){
+            console.log(`   🔒 Bloqueando módulo: ${mod.id}`);
+            card.classList.add('inativo');
+            card.onclick = function(e){ e.preventDefault(); return false; };
+            
+            // Adicionar cadeado
+            if(!card.querySelector('.mod-lock')){
+              const lock = document.createElement('div');
+              lock.className = 'mod-lock';
+              lock.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>`;
+              card.appendChild(lock);
+            }
+          }
+        });
+      });
+    } else {
+      console.warn('⚠️  Permissões não encontradas para:', chave);
+    }
+  } catch(err){
+    console.error('❌ Erro ao carregar permissões:', err);
+  }
+})();
+
+lucide.createIcons();
+</script>
+
+</body>
+</html>
