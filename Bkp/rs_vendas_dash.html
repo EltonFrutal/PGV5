@@ -1,0 +1,1702 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Vendas &mdash; RS &mdash; PGV5</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{background:#e2e8f0;color:#1e293b;font-family:'DM Sans',sans-serif;min-height:100vh;}
+.hdr-main{background:#000;border-bottom:1px solid #1e293b;padding:0 28px;height:58px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.3);}
+.hdr-menu-btn{background:transparent;border:1.5px solid #334155;border-radius:8px;color:#94a3b8;
+  padding:8px;cursor:pointer;text-decoration:none;transition:all .2s;display:flex;align-items:center;
+  justify-content:center;width:38px;height:38px;}
+.hdr-menu-btn:hover{border-color:#fff;color:#fff;background:rgba(255,255,255,.1);}
+.hdr-menu-btn svg{display:block;}
+.hdr-right{display:flex;align-items:center;gap:12px;}
+.hdr-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);
+  display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;color:#fff;overflow:hidden;}
+.btn-trocar-org{background:transparent;border:1.5px solid #334155;border-radius:8px;color:#94a3b8;
+  padding:8px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;
+  width:38px;height:38px;text-decoration:none;}
+.btn-trocar-org:hover{border-color:#fff;color:#fff;background:rgba(255,255,255,.1);}
+.btn-trocar-org svg{display:block;}
+.btn-logoff{background:transparent;border:1.5px solid #334155;border-radius:7px;color:#94a3b8;
+  font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:600;padding:8px 12px;cursor:pointer;
+  transition:all .2s;display:flex;align-items:center;}
+.btn-logoff:hover{border-color:#ef4444;color:#ef4444;background:rgba(239,68,68,.1);}
+.btn-logoff svg{display:block;}
+.hdr-sub{background:#fff;border-bottom:1px solid #e2e8f0;padding:0 28px;height:50px;
+  display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+.subnav-btn{background:transparent;border:none;font-family:'DM Sans',sans-serif;font-size:.82rem;
+  font-weight:600;color:#64748b;padding:6px 14px;border-radius:6px;cursor:pointer;text-decoration:none;transition:all .2s;}
+.subnav-btn:hover{background:#f1f5f9;color:#1e293b;}
+.subnav-btn.active{background:#6366f115;color:#6366f1;}
+.sub-div{width:1px;height:20px;background:#e2e8f0;}
+.filtro-wrap{display:flex;align-items:center;gap:8px;margin-left:auto;flex-wrap:wrap;}
+.filtro-label{font-size:.7rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;}
+.filtro-select{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:7px;color:#334155;
+  font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;padding:5px 10px;outline:none;cursor:pointer;transition:border-color .2s;}
+.filtro-select:focus{border-color:#6366f1;}
+.filtro-nav-btn{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:6px;color:#475569;
+  font-size:.78rem;font-weight:700;padding:5px 9px;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;}
+.filtro-nav-btn:hover{border-color:#6366f1;color:#6366f1;background:#fff;}
+main{padding:22px 28px 48px;}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px;}
+.kpi-card{background:#fff;border:1px solid #e8ecf4;border-radius:14px;padding:10px 12px;
+  position:relative;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.05);transition:box-shadow .2s;}
+.kpi-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.09);}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--kc,#6366f1);}
+.kpi-titulo{font-size:.72rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;}
+.kpi-valor{font-size:1.9rem;font-weight:800;color:#0f172a;letter-spacing:-.04em;line-height:1;margin-bottom:6px;}
+.kpi-var{font-size:.8rem;font-weight:700;}
+.kpi-footer{display:flex;justify-content:space-between;margin-top:10px;padding-top:10px;
+  border-top:1px solid #f1f5f9;font-size:.7rem;color:#94a3b8;font-weight:500;}
+.prog-bar{height:4px;background:#f1f5f9;border-radius:3px;margin-top:10px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:3px;}
+.kpi-ph{background:#fff;border:2px dashed #e2e8f0;border-radius:14px;padding:18px 20px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:120px;}
+.kpi-ph .ph-t{font-size:.72rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;}
+.kpi-ph .ph-m{font-size:.7rem;color:#cbd5e1;line-height:1.6;}
+.chart-row{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;margin-bottom:16px;}
+.chart-card{background:#fff;border:1px solid #e8ecf4;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);}
+.chart-titulo{font-size:.9rem;font-weight:800;color:#0f172a;letter-spacing:-.02em;}
+.chart-sub{font-size:.7rem;color:#94a3b8;font-weight:500;margin-top:3px;}
+.chart-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;}
+.chart-leg{display:flex;gap:12px;flex-wrap:wrap;}
+.leg-i{display:flex;align-items:center;gap:5px;font-size:.68rem;color:#64748b;font-weight:500;}
+.leg-d{width:10px;height:10px;border-radius:2px;}
+.chart-wrap{position:relative;height:220px;}
+.kpi2-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.kpi2-card{background:#fff;border:1px solid #e8ecf4;border-radius:14px;padding:10px 12px;box-shadow:0 1px 3px rgba(0,0,0,.05);}
+.kpi2-titulo{font-size:.7rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px;}
+.kpi2-vals{display:flex;align-items:flex-end;gap:14px;margin-bottom:6px;}
+.kpi2-v{font-size:1.7rem;font-weight:800;letter-spacing:-.04em;}
+.kpi2-v.sec{font-size:1.3rem;color:#94a3b8;}
+.kpi2-vr{font-size:1rem;font-weight:800;}
+.kpi2-labs{display:flex;gap:14px;font-size:.65rem;color:#94a3b8;font-weight:500;}
+.kpi2-ph{background:#fff;border:2px dashed #e2e8f0;border-radius:14px;padding:18px 20px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.kpi-card,.kpi2-card,.chart-card,.kpi-ph,.kpi2-ph{animation:fadeUp .4s ease both;}
+@media(max-width:900px){
+  .kpi-row,.kpi2-row{grid-template-columns:repeat(2,1fr);}
+  .chart-row{grid-template-columns:1fr;}
+  main{padding:16px;}
+  .hdr-main,.hdr-sub{padding:0 16px;}
+}
+body{display:block;}.toggle-btn{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:6px;color:#64748b;font-size:.75rem;font-weight:700;padding:5px 13px;cursor:pointer;transition:all .2s;font-family:"Plus Jakarta Sans",sans-serif;}.toggle-btn.active{background:#6366f1;border-color:#6366f1;color:#fff;}#modal-margem{display:none;position:fixed;inset:0;z-index:999;background:rgba(15,23,42,.55);backdrop-filter:blur(4px);align-items:center;justify-content:center;}#modal-margem.open{display:flex;}#modal-carteiras{display:none;position:fixed;inset:0;z-index:999;background:rgba(15,23,42,.55);backdrop-filter:blur(4px);align-items:center;justify-content:center;}#modal-carteiras.open{display:flex;}#modal-pedidos{display:none;position:fixed;inset:0;z-index:999;background:rgba(15,23,42,.55);backdrop-filter:blur(4px);align-items:center;justify-content:center;}#modal-pedidos.open{display:flex;}#modal-clientes{display:none;position:fixed;inset:0;z-index:999;background:rgba(15,23,42,.55);backdrop-filter:blur(4px);align-items:center;justify-content:center;}#modal-clientes.open{display:flex;}#modal-ticket{display:none;position:fixed;inset:0;z-index:999;background:rgba(15,23,42,.55);backdrop-filter:blur(4px);align-items:center;justify-content:center;}#modal-ticket.open{display:flex;}.modal-box{background:#fff;border-radius:20px;padding:28px 28px 24px;width:min(640px,92vw);box-shadow:0 24px 60px rgba(0,0,0,.18);animation:fadeUp .25s ease;}.modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}.modal-titulo{font-size:1rem;font-weight:800;color:#0f172a;letter-spacing:-.02em;}.modal-sub{font-size:.72rem;color:#94a3b8;font-weight:500;margin-top:3px;}.modal-close{background:none;border:none;cursor:pointer;color:#94a3b8;font-size:1.4rem;line-height:1;padding:2px 6px;border-radius:6px;transition:all .2s;}.modal-close:hover{background:#f1f5f9;color:#0f172a;}.modal-wrap{position:relative;height:200px;}</style>
+</head>
+<body>
+<header class="hdr-main"><div style="display:flex;align-items:center;gap:16px;"><a href="rs.html" class="hdr-menu-btn" title="Menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></a><img src="imagem/logos/sistema.png" alt="PGV5" style="height:34px" onerror="this.style.display='none'"><span style="color:#fff;font-weight:700;font-size:1.1rem;letter-spacing:-.02em">Painel Gerencial</span><span style="color:#64748b;font-size:.75rem;font-weight:500;margin-left:12px">Atualizado em: 21/05/2026</span></div><div class="hdr-right"><img src="imagem/logos/rs.png" style="height:32px;margin-right:8px" onerror="this.style.display='none'"><div class="hdr-avatar" id="hdr-avatar">?</div><a href="index.html" class="btn-trocar-org" title="Trocar Organização"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></a><button class="btn-logoff" id="btn-logout"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg><span style="margin-left:6px">Sair</span></button></div></header><div class="hdr-sub"><a href="rs_vendas_dash.html" class="subnav-btn active">Dashboard</a><a href="rs_vendas_lista.html" class="subnav-btn ">Listagem</a><div class="filtro-wrap"><span class="filtro-label">Empresa</span><select class="filtro-select" id="f-empresa" onchange="aplicarFiltros()"></select></div><div class="filtro-wrap"><span class="filtro-label">Ano Base</span><select class="filtro-select" id="f-ano" onchange="aplicarFiltros()"></select></div></div><script>(function(){var s=sessionStorage.getItem("pgv5");if(!s){window.location="index.html";return;}var u=JSON.parse(s);var avatar=document.getElementById("hdr-avatar");if(u.foto){avatar.innerHTML='<img src="'+u.foto+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';}else{avatar.textContent=u.nome.charAt(0).toUpperCase();}document.getElementById("btn-logout").addEventListener("click",function(){sessionStorage.removeItem("pgv5");window.location="index.html";});})();</script>
+<main>
+<div class="kpi-row">
+  <div class="kpi-card" style="--kc:#10b981;animation-delay:.04s">
+    <div class="kpi-titulo">Vendas Mai/2026</div>
+    <div style="color:#16a34a;font-size:.75rem;font-weight:500;margin-bottom:12px;font-family:'Plus Jakarta Sans',sans-serif;">Melhor &#9650;</div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;">
+      <div class="kpi-valor" style="color:#10b981;font-family:'Plus Jakarta Sans',sans-serif;">349.05K</div>
+      <div style="color:#10b981;font-size:1.1rem;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;">↑ 13.6%</div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+      <div style="font-size:.75rem;color:#64748b;font-weight:500;font-family:'Plus Jakarta Sans',sans-serif;">Meta: 307.29K</div>
+      <div style="font-size:.8rem;font-weight:500;color:#10b981;font-family:'Plus Jakarta Sans',sans-serif;">114%</div>
+    </div>
+    <div class="prog-bar" style="height:8px;"><div class="prog-fill" style="width:100%;background:#10b981"></div></div>
+  </div>
+  <div class="kpi-card" style="--kc:#10b981;animation-delay:.08s">
+    <div class="kpi-titulo">Venda Ano 2026</div>
+    <div style="color:#16a34a;font-size:.75rem;font-weight:500;margin-bottom:12px;font-family:'Plus Jakarta Sans',sans-serif;">Melhor &#9650;</div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;">
+      <div class="kpi-valor" style="color:#10b981;font-family:'Plus Jakarta Sans',sans-serif;">2.44M</div>
+      <div style="color:#10b981;font-size:1.1rem;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;">↑ 6.9%</div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+      <div style="font-size:.75rem;color:#64748b;font-weight:500;font-family:'Plus Jakarta Sans',sans-serif;">Meta: 2.29M</div>
+      <div style="font-size:.8rem;font-weight:500;color:#10b981;font-family:'Plus Jakarta Sans',sans-serif;">107%</div>
+    </div>
+    <div class="prog-bar" style="height:8px;"><div class="prog-fill" style="width:100%;background:#10b981"></div></div>
+  </div>
+  <div class="kpi-card" style="--kc:#10b981;animation-delay:.12s">
+    <div class="kpi-titulo">Margem Mai/2026</div>
+    <div style="color:#16a34a;font-size:.75rem;font-weight:500;margin-bottom:12px;font-family:'Plus Jakarta Sans',sans-serif;">Melhor &#9650;</div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;">
+      <div class="kpi-valor" style="color:#10b981;font-family:'Plus Jakarta Sans',sans-serif;">42.4%</div>
+      <div style="color:#10b981;font-size:1.1rem;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;">↑ 1.5%</div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+      <div style="font-size:.75rem;color:#64748b;font-weight:500;font-family:'Plus Jakarta Sans',sans-serif;">Meta: 40.9%</div>
+      <div style="font-size:.8rem;font-weight:500;color:#10b981;font-family:'Plus Jakarta Sans',sans-serif;">104%</div>
+    </div>
+    <div class="prog-bar" style="height:8px;"><div class="prog-fill" style="width:100%;background:#10b981"></div></div>
+  </div>
+  <div class="kpi-card" style="--kc:#8b5cf6;animation-delay:.16s;cursor:pointer" onclick="abrirModalCarteiras()">
+    <div class="kpi-titulo">Formas Pagamento 2026</div>
+    <div style="display:grid;grid-template-columns:100px 1fr;gap:12px;align-items:center;margin-top:4px">
+      <!-- Gráfico Rosca -->
+      <div style="position:relative;width:100px;height:100px">
+        <canvas id="chartRoscaCart" width="100" height="100"></canvas>
+        <div id="labelRoscaCart" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none">
+          <div style="font-size:1.4rem;font-weight:800;color:#8b5cf6;font-family:'Plus Jakarta Sans',sans-serif;line-height:1">--</div>
+          <div style="font-size:.6rem;color:#94a3b8;font-weight:600;margin-top:2px;font-family:'Plus Jakarta Sans',sans-serif">Crediário</div>
+        </div>
+      </div>
+      <!-- Lista Outras Carteiras -->
+      <div id="listaCarteiras" style="display:flex;flex-direction:column;gap:4px;max-height:100px;overflow-y:auto">
+        <!-- Preenchido via JS -->
+      </div>
+    </div>
+  </div>
+</div>
+<div class="chart-row">
+  <div class="chart-card" style="animation-delay:.2s">
+    <div class="chart-hdr">
+      <div>
+        <div class="chart-titulo">Vendas Mensais</div>
+        <div class="chart-sub" id="sub-mensal">Ano base vs ano anterior</div>
+      </div>
+      <div class="chart-leg">
+        <div class="leg-i"><div class="leg-d" style="background:#6366f1"></div><span id="leg-base">2026</span></div>
+        <div class="leg-i"><div class="leg-d" style="background:#f97316"></div><span id="leg-ant">2025</span></div>
+        <div class="leg-i"><div class="leg-d" style="background:#fbbf24;border-radius:50%"></div>Meta</div>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="chartMensal"></canvas></div>
+  </div>
+  <div class="chart-card" style="animation-delay:.24s">
+    <div class="chart-hdr">
+      <div>
+        <div class="chart-titulo">Anuais &mdash; &Uacute;ltimos 5 Anos</div>
+        <div class="chart-sub" id="sub-anual">Faturamento anual</div>
+      </div>
+      <div style="display:flex;gap:6px;">
+        <button class="toggle-btn active" id="btn-venda" onclick="toggleAnual('venda')">Vendas</button>
+        <button class="toggle-btn" id="btn-periodo" onclick="toggleAnual('periodo')">Vendas Período</button>
+        <button class="toggle-btn" id="btn-margem" onclick="toggleAnual('margem')">Margem %</button>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="chartAnual"></canvas></div>
+  </div>
+</div>
+<div class="kpi2-row">
+  <div class="kpi2-card" style="animation-delay:.28s;cursor:pointer" onclick="abrirModalPedidos()">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+      <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#06b6d4,#3b82f6);display:flex;align-items:center;justify-content:center;"><i data-lucide="package" style="width:20px;height:20px;color:#fff"></i></div>
+      <div class="kpi2-titulo" style="margin:0">Pedidos</div>
+    </div>
+    <div style="display:flex;gap:16px;align-items:flex-end">
+      <div style="flex:1">
+        <div style="font-size:1.8rem;font-weight:800;color:#6366f1;font-family:'Plus Jakarta Sans',sans-serif;line-height:1">2.181</div>
+        <div style="font-size:.7rem;color:#94a3b8;margin-top:4px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif">2026</div>
+      </div>
+      <div style="flex:1">
+        <div style="font-size:1.2rem;font-weight:700;color:#94a3b8;font-family:'Plus Jakarta Sans',sans-serif;line-height:1">2.062</div>
+        <div style="font-size:.7rem;color:#94a3b8;margin-top:4px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif">2025</div>
+      </div>
+      <div style="flex:1;text-align:right">
+        <div style="font-size:1.2rem;font-weight:800;color:#10b981;font-family:'Plus Jakarta Sans',sans-serif;line-height:1">+5.8%</div>
+        <div style="font-size:.7rem;color:#94a3b8;margin-top:4px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif">Var.</div>
+      </div>
+    </div>
+  </div>
+  <div class="kpi2-card" style="animation-delay:.32s;cursor:pointer" onclick="abrirModalClientes()">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+      <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#10b981,#06b6d4);display:flex;align-items:center;justify-content:center;"><i data-lucide="users" style="width:20px;height:20px;color:#fff"></i></div>
+      <div class="kpi2-titulo" style="margin:0">Clientes</div>
+    </div>
+    <div style="display:flex;gap:16px;align-items:flex-end">
+      <div style="flex:1">
+        <div style="font-size:1.8rem;font-weight:800;color:#6366f1;font-family:'Plus Jakarta Sans',sans-serif;line-height:1">1.213</div>
+        <div style="font-size:.7rem;color:#94a3b8;margin-top:4px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif">2026</div>
+      </div>
+      <div style="flex:1">
+        <div style="font-size:1.2rem;font-weight:700;color:#94a3b8;font-family:'Plus Jakarta Sans',sans-serif;line-height:1">1.086</div>
+        <div style="font-size:.7rem;color:#94a3b8;margin-top:4px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif">2025</div>
+      </div>
+      <div style="flex:1;text-align:right">
+        <div style="font-size:1.2rem;font-weight:800;color:#10b981;font-family:'Plus Jakarta Sans',sans-serif;line-height:1">+11.7%</div>
+        <div style="font-size:.7rem;color:#94a3b8;margin-top:4px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif">Var.</div>
+      </div>
+    </div>
+  </div>
+  <div class="kpi2-card" style="animation-delay:.36s;cursor:pointer" onclick="abrirModalTicket()">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+      <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#f59e0b,#f97316);display:flex;align-items:center;justify-content:center;"><i data-lucide="dollar-sign" style="width:20px;height:20px;color:#fff"></i></div>
+      <div class="kpi2-titulo" style="margin:0">Ticket M&eacute;dio</div>
+    </div>
+    <div style="display:flex;gap:16px;align-items:flex-end">
+      <div style="flex:1">
+        <div style="font-size:1.8rem;font-weight:800;color:#6366f1;font-family:'Plus Jakarta Sans',sans-serif;line-height:1">266</div>
+        <div style="font-size:.7rem;color:#94a3b8;margin-top:4px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif">2026</div>
+      </div>
+      <div style="flex:1">
+        <div style="font-size:1.2rem;font-weight:700;color:#94a3b8;font-family:'Plus Jakarta Sans',sans-serif;line-height:1">243</div>
+        <div style="font-size:.7rem;color:#94a3b8;margin-top:4px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif">2025</div>
+      </div>
+      <div style="flex:1;text-align:right">
+        <div style="font-size:1.2rem;font-weight:800;color:#10b981;font-family:'Plus Jakarta Sans',sans-serif;line-height:1">+9.6%</div>
+        <div style="font-size:.7rem;color:#94a3b8;margin-top:4px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif">Var.</div>
+      </div>
+    </div>
+  </div>
+  <div class="kpi2-card" style="animation-delay:.4s;cursor:pointer" onclick="abrirModalIndice()">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+      <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#8b5cf6,#a78bfa);display:flex;align-items:center;justify-content:center;"><i data-lucide="trending-up" style="width:20px;height:20px;color:#fff"></i></div>
+      <div class="kpi2-titulo" style="margin:0">&Iacute;ndice Recebimento</div>
+    </div>
+    <div style="display:flex;gap:16px;align-items:flex-end">
+      <div style="flex:1">
+        <div style="font-size:1.8rem;font-weight:800;color:#6366f1;font-family:'Plus Jakarta Sans',sans-serif;line-height:1">42.2%</div>
+        <div style="font-size:.7rem;color:#94a3b8;margin-top:4px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif">2026</div>
+      </div>
+      <div style="flex:1">
+        <div style="font-size:1.2rem;font-weight:700;color:#94a3b8;font-family:'Plus Jakarta Sans',sans-serif;line-height:1">79.2%</div>
+        <div style="font-size:.7rem;color:#94a3b8;margin-top:4px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif">2025</div>
+      </div>
+      <div style="flex:1;text-align:right">
+        <div style="font-size:1.2rem;font-weight:800;color:#ef4444;font-family:'Plus Jakarta Sans',sans-serif;line-height:1">-37.0p.p.</div>
+        <div style="font-size:.7rem;color:#94a3b8;margin-top:4px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif">Var.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</main>
+<div id="modal-margem">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <div>
+        <div class="modal-titulo" id="modal-titulo">Margem % Mensal</div>
+        <div class="modal-sub" id="modal-sub"></div>
+      </div>
+      <button class="modal-close" onclick="fecharModal()">&#x2715;</button>
+    </div>
+    <div class="modal-wrap"><canvas id="chartModalMargem"></canvas></div>
+  </div>
+</div>
+<div id="modal-carteiras">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <div><div id="modal-cart-titulo" class="modal-titulo"></div>
+           <div id="modal-cart-sub" class="modal-sub"></div></div>
+      <button class="modal-close" onclick="fecharModalCarteiras()">&#x2715;</button>
+    </div>
+    <div class="modal-wrap"><canvas id="chartModalCart"></canvas></div>
+  </div>
+</div>
+<div id="modal-pedidos">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <div><div id="modal-ped-titulo" class="modal-titulo"></div>
+           <div id="modal-ped-sub" class="modal-sub"></div></div>
+      <button class="modal-close" onclick="fecharModalPedidos()">&#x2715;</button>
+    </div>
+    <div class="modal-wrap"><canvas id="chartModalPed"></canvas></div>
+  </div>
+</div>
+<div id="modal-clientes">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <div><div id="modal-cli-titulo" class="modal-titulo"></div>
+           <div id="modal-cli-sub" class="modal-sub"></div></div>
+      <button class="modal-close" onclick="fecharModalClientes()">&#x2715;</button>
+    </div>
+    <div class="modal-wrap"><canvas id="chartModalCli"></canvas></div>
+  </div>
+</div>
+<div id="modal-ticket">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <div><div id="modal-tkt-titulo" class="modal-titulo"></div>
+           <div id="modal-tkt-sub" class="modal-sub"></div></div>
+      <button class="modal-close" onclick="fecharModalTicket()">&#x2715;</button>
+    </div>
+    <div class="modal-wrap"><canvas id="chartModalTkt"></canvas></div>
+  </div>
+</div>
+<script>
+var MENSAL_R  = [{"ano_mes": "2025-01", "faturamento": 554401.93, "custo": 314892.48, "qtd_pedidos": 2297, "margem": 239509.45, "margem_pct": 43.2}, {"ano_mes": "2025-02", "faturamento": 399670.84, "custo": 226393.69, "qtd_pedidos": 1653, "margem": 173277.15, "margem_pct": 43.4}, {"ano_mes": "2025-03", "faturamento": 411160.1, "custo": 237501.56, "qtd_pedidos": 1719, "margem": 173658.54, "margem_pct": 42.2}, {"ano_mes": "2025-04", "faturamento": 433539.1, "custo": 251934.5, "qtd_pedidos": 1712, "margem": 181604.6, "margem_pct": 41.9}, {"ano_mes": "2025-05", "faturamento": 393403.6, "custo": 231580.87, "qtd_pedidos": 1656, "margem": 161822.73, "margem_pct": 41.1}, {"ano_mes": "2025-06", "faturamento": 413846.65, "custo": 240411.01, "qtd_pedidos": 1585, "margem": 173435.64, "margem_pct": 41.9}, {"ano_mes": "2025-07", "faturamento": 470223.62, "custo": 279184.9, "qtd_pedidos": 1887, "margem": 191038.72, "margem_pct": 40.6}, {"ano_mes": "2025-08", "faturamento": 463759.82, "custo": 258980.88, "qtd_pedidos": 1822, "margem": 204778.94, "margem_pct": 44.2}, {"ano_mes": "2025-09", "faturamento": 457634.09, "custo": 257014.96, "qtd_pedidos": 1745, "margem": 200619.13, "margem_pct": 43.8}, {"ano_mes": "2025-10", "faturamento": 396896.45, "custo": 223863.13, "qtd_pedidos": 1724, "margem": 173033.32, "margem_pct": 43.6}, {"ano_mes": "2025-11", "faturamento": 406734.06, "custo": 238394.14, "qtd_pedidos": 1558, "margem": 168339.92, "margem_pct": 41.4}, {"ano_mes": "2025-12", "faturamento": 446842.21, "custo": 261343.49, "qtd_pedidos": 2009, "margem": 185498.72, "margem_pct": 41.5}, {"ano_mes": "2026-01", "faturamento": 457768.92, "custo": 258157.1, "qtd_pedidos": 1912, "margem": 199611.82, "margem_pct": 43.6}, {"ano_mes": "2026-02", "faturamento": 430559.66, "custo": 231278.95, "qtd_pedidos": 1712, "margem": 199280.71, "margem_pct": 46.3}, {"ano_mes": "2026-03", "faturamento": 616662.95, "custo": 332740.09, "qtd_pedidos": 2235, "margem": 283922.86, "margem_pct": 46.0}, {"ano_mes": "2026-04", "faturamento": 590634.53, "custo": 325181.66, "qtd_pedidos": 2038, "margem": 265452.87, "margem_pct": 44.9}, {"ano_mes": "2026-05", "faturamento": 349046.21, "custo": 201157.08, "qtd_pedidos": 1279, "margem": 147889.13, "margem_pct": 42.4}];
+var ANUAL5    = [{"ano": "2023", "faturamento": 4780963.56, "custo": 2789129.78, "qtd_pedidos": 22987, "margem": 1991833.78, "margem_pct": 41.7}, {"ano": "2024", "faturamento": 5778452.98, "custo": 3262379.43, "qtd_pedidos": 24623, "margem": 2516073.55, "margem_pct": 43.5}, {"ano": "2025", "faturamento": 5248112.47, "custo": 3021495.6, "qtd_pedidos": 21367, "margem": 2226616.87, "margem_pct": 42.4}, {"ano": "2026", "faturamento": 2444672.27, "custo": 1348514.89, "qtd_pedidos": 9176, "margem": 1096157.38, "margem_pct": 44.8}];
+var ANUAL_PERIODO = [{"ano": "2023", "faturamento": 1861672.15, "custo": 1091101.81, "margem": 770570.34}, {"ano": "2024", "faturamento": 2088686.6, "custo": 1208412.32, "margem": 880274.28}, {"ano": "2025", "faturamento": 2044443.93, "custo": 1174153.06, "margem": 870290.87}, {"ano": "2026", "faturamento": 2444672.27, "custo": 1348514.89, "margem": 1096157.38}];
+var ORCAMENTO = [{"empresa_id": "1", "ano_mes": "2025-01", "orcamento": 500000.0, "cmv": -285000.0, "margem_pct": 43.0}, {"empresa_id": "1", "ano_mes": "2025-02", "orcamento": 445000.0, "cmv": -253650.0, "margem_pct": 43.0}, {"empresa_id": "1", "ano_mes": "2025-03", "orcamento": 510000.0, "cmv": -290700.0, "margem_pct": 43.0}, {"empresa_id": "1", "ano_mes": "2025-04", "orcamento": 580000.0, "cmv": -330600.0, "margem_pct": 43.0}, {"empresa_id": "1", "ano_mes": "2025-05", "orcamento": 540000.0, "cmv": -307800.0, "margem_pct": 43.0}, {"empresa_id": "1", "ano_mes": "2025-06", "orcamento": 430000.0, "cmv": -245100.0, "margem_pct": 43.0}, {"empresa_id": "1", "ano_mes": "2025-07", "orcamento": 590000.0, "cmv": -336300.0, "margem_pct": 43.0}, {"empresa_id": "1", "ano_mes": "2025-08", "orcamento": 615000.0, "cmv": -350550.0, "margem_pct": 43.0}, {"empresa_id": "1", "ano_mes": "2025-09", "orcamento": 535000.0, "cmv": -304950.0, "margem_pct": 43.0}, {"empresa_id": "1", "ano_mes": "2025-10", "orcamento": 560000.0, "cmv": -319200.0, "margem_pct": 43.0}, {"empresa_id": "1", "ano_mes": "2025-11", "orcamento": 645000.0, "cmv": -367650.0, "margem_pct": 43.0}, {"empresa_id": "1", "ano_mes": "2025-12", "orcamento": 700000.0, "cmv": -399000.0, "margem_pct": 43.0}, {"empresa_id": "1", "ano_mes": "2026-01", "orcamento": 610000.0, "cmv": -349000.0, "margem_pct": 42.786885245901644}, {"empresa_id": "1", "ano_mes": "2026-02", "orcamento": 440000.0, "cmv": -250000.0, "margem_pct": 43.18181818181818}, {"empresa_id": "1", "ano_mes": "2026-03", "orcamento": 452000.0, "cmv": -262000.0, "margem_pct": 42.0353982300885}, {"empresa_id": "1", "ano_mes": "2026-04", "orcamento": 477000.0, "cmv": -278000.0, "margem_pct": 41.719077568134175}, {"empresa_id": "1", "ano_mes": "2026-05", "orcamento": 433000.0, "cmv": -256000.0, "margem_pct": 40.877598152424945}, {"empresa_id": "1", "ano_mes": "2026-06", "orcamento": 455000.0, "cmv": -265000.0, "margem_pct": 41.75824175824176}, {"empresa_id": "1", "ano_mes": "2026-07", "orcamento": 517000.0, "cmv": -308000.0, "margem_pct": 40.42553191489361}, {"empresa_id": "1", "ano_mes": "2026-08", "orcamento": 510000.0, "cmv": -286000.0, "margem_pct": 43.92156862745098}, {"empresa_id": "1", "ano_mes": "2026-09", "orcamento": 503000.0, "cmv": -284000.0, "margem_pct": 43.538767395626245}, {"empresa_id": "1", "ano_mes": "2026-10", "orcamento": 437000.0, "cmv": -247000.0, "margem_pct": 43.47826086956522}, {"empresa_id": "1", "ano_mes": "2026-11", "orcamento": 447000.0, "cmv": -263000.0, "margem_pct": 41.163310961968676}, {"empresa_id": "1", "ano_mes": "2026-12", "orcamento": 480000.0, "cmv": -285000.0, "margem_pct": 40.625}];
+var CARTEIRAS = [{"ano_mes": "2007-06", "ano": "2007", "mes": "06", "carteira": "CARTAO", "valor": 356.0}, {"ano_mes": "2007-07", "ano": "2007", "mes": "07", "carteira": "CARTAO", "valor": 2263.25}, {"ano_mes": "2007-08", "ano": "2007", "mes": "08", "carteira": "CARTAO", "valor": 6389.83}, {"ano_mes": "2007-09", "ano": "2007", "mes": "09", "carteira": "CARTAO", "valor": 16695.0}, {"ano_mes": "2007-10", "ano": "2007", "mes": "10", "carteira": "CARTAO", "valor": 40112.399999999994}, {"ano_mes": "2007-11", "ano": "2007", "mes": "11", "carteira": "CARTAO", "valor": 63528.5}, {"ano_mes": "2007-12", "ano": "2007", "mes": "12", "carteira": "CARTAO", "valor": 83767.0}, {"ano_mes": "2008-01", "ano": "2008", "mes": "01", "carteira": "CARTAO", "valor": 71239.0}, {"ano_mes": "2008-02", "ano": "2008", "mes": "02", "carteira": "CARTAO", "valor": 61249.50000000001}, {"ano_mes": "2008-03", "ano": "2008", "mes": "03", "carteira": "CARTAO", "valor": 60701.92}, {"ano_mes": "2008-04", "ano": "2008", "mes": "04", "carteira": "CARTAO", "valor": 61474.5}, {"ano_mes": "2008-05", "ano": "2008", "mes": "05", "carteira": "CARTAO", "valor": 60065.5}, {"ano_mes": "2008-06", "ano": "2008", "mes": "06", "carteira": "CARTAO", "valor": 61081.7}, {"ano_mes": "2008-07", "ano": "2008", "mes": "07", "carteira": "CARTAO", "valor": 69588.98999999999}, {"ano_mes": "2008-08", "ano": "2008", "mes": "08", "carteira": "CARTAO", "valor": 54268.0}, {"ano_mes": "2008-09", "ano": "2008", "mes": "09", "carteira": "CARTAO", "valor": 67107.85}, {"ano_mes": "2008-10", "ano": "2008", "mes": "10", "carteira": "CARTAO", "valor": 72448.0}, {"ano_mes": "2008-11", "ano": "2008", "mes": "11", "carteira": "CARTAO", "valor": 68727.13}, {"ano_mes": "2008-12", "ano": "2008", "mes": "12", "carteira": "CARTAO", "valor": 70779.51000000001}, {"ano_mes": "2009-01", "ano": "2009", "mes": "01", "carteira": "CARTAO", "valor": 72026.08}, {"ano_mes": "2009-02", "ano": "2009", "mes": "02", "carteira": "CARTAO", "valor": 61368.0}, {"ano_mes": "2009-03", "ano": "2009", "mes": "03", "carteira": "CARTAO", "valor": 57155.0}, {"ano_mes": "2009-04", "ano": "2009", "mes": "04", "carteira": "CARTAO", "valor": 65198.0}, {"ano_mes": "2009-05", "ano": "2009", "mes": "05", "carteira": "CARTAO", "valor": 66097.23000000001}, {"ano_mes": "2009-06", "ano": "2009", "mes": "06", "carteira": "CARTAO", "valor": 53327.85}, {"ano_mes": "2009-07", "ano": "2009", "mes": "07", "carteira": "CARTAO", "valor": 64693.5}, {"ano_mes": "2009-08", "ano": "2009", "mes": "08", "carteira": "CARTAO", "valor": 62111.25}, {"ano_mes": "2009-09", "ano": "2009", "mes": "09", "carteira": "CARTAO", "valor": 78326.00000000001}, {"ano_mes": "2009-10", "ano": "2009", "mes": "10", "carteira": "CARTAO", "valor": 70503.52}, {"ano_mes": "2009-11", "ano": "2009", "mes": "11", "carteira": "CARTAO", "valor": 66439.83000000002}, {"ano_mes": "2009-12", "ano": "2009", "mes": "12", "carteira": "CARTAO", "valor": 97690.01}, {"ano_mes": "2010-01", "ano": "2010", "mes": "01", "carteira": "CARTAO", "valor": 57332.25}, {"ano_mes": "2010-02", "ano": "2010", "mes": "02", "carteira": "CARTAO", "valor": 62017.33}, {"ano_mes": "2010-03", "ano": "2010", "mes": "03", "carteira": "CARTAO", "valor": 85909.52}, {"ano_mes": "2010-04", "ano": "2010", "mes": "04", "carteira": "CARTAO", "valor": 78476.5}, {"ano_mes": "2010-05", "ano": "2010", "mes": "05", "carteira": "CARTAO", "valor": 89363.0}, {"ano_mes": "2010-06", "ano": "2010", "mes": "06", "carteira": "CARTAO", "valor": 70036.5}, {"ano_mes": "2010-07", "ano": "2010", "mes": "07", "carteira": "CARTAO", "valor": 96458.01000000001}, {"ano_mes": "2010-08", "ano": "2010", "mes": "08", "carteira": "CARTAO", "valor": 94629.5}, {"ano_mes": "2010-09", "ano": "2010", "mes": "09", "carteira": "CARTAO", "valor": 89564.58}, {"ano_mes": "2010-10", "ano": "2010", "mes": "10", "carteira": "CARTAO", "valor": 86760.37000000001}, {"ano_mes": "2010-11", "ano": "2010", "mes": "11", "carteira": "CARTAO", "valor": 98181.51000000001}, {"ano_mes": "2010-12", "ano": "2010", "mes": "12", "carteira": "CARTAO", "valor": 105520.8}, {"ano_mes": "2011-01", "ano": "2011", "mes": "01", "carteira": "CARTAO", "valor": 76698.16000000002}, {"ano_mes": "2011-02", "ano": "2011", "mes": "02", "carteira": "CARTAO", "valor": 112709.64000000001}, {"ano_mes": "2011-03", "ano": "2011", "mes": "03", "carteira": "CARTAO", "valor": 95983.51}, {"ano_mes": "2011-04", "ano": "2011", "mes": "04", "carteira": "CARTAO", "valor": 78540.75}, {"ano_mes": "2011-05", "ano": "2011", "mes": "05", "carteira": "CARTAO", "valor": 85508.0}, {"ano_mes": "2011-06", "ano": "2011", "mes": "06", "carteira": "CARTAO", "valor": 80447.51999999999}, {"ano_mes": "2011-07", "ano": "2011", "mes": "07", "carteira": "CARTAO", "valor": 81632.0}, {"ano_mes": "2011-08", "ano": "2011", "mes": "08", "carteira": "CARTAO", "valor": 72416.75}, {"ano_mes": "2011-09", "ano": "2011", "mes": "09", "carteira": "CARTAO", "valor": 74770.5}, {"ano_mes": "2011-10", "ano": "2011", "mes": "10", "carteira": "CARTAO", "valor": 87448.65}, {"ano_mes": "2011-11", "ano": "2011", "mes": "11", "carteira": "CARTAO", "valor": 77176.0}, {"ano_mes": "2011-12", "ano": "2011", "mes": "12", "carteira": "CARTAO", "valor": 103715.16}, {"ano_mes": "2012-01", "ano": "2012", "mes": "01", "carteira": "CARTAO", "valor": 111798.70000000001}, {"ano_mes": "2012-02", "ano": "2012", "mes": "02", "carteira": "CARTAO", "valor": 79607.0}, {"ano_mes": "2012-03", "ano": "2012", "mes": "03", "carteira": "CARTAO", "valor": 75545.5}, {"ano_mes": "2012-04", "ano": "2012", "mes": "04", "carteira": "CARTAO", "valor": 82592.01999999999}, {"ano_mes": "2012-05", "ano": "2012", "mes": "05", "carteira": "CARTAO", "valor": 87174.95999999999}, {"ano_mes": "2012-06", "ano": "2012", "mes": "06", "carteira": "CARTAO", "valor": 84419.70000000001}, {"ano_mes": "2012-07", "ano": "2012", "mes": "07", "carteira": "CARTAO", "valor": 66173.0}, {"ano_mes": "2012-08", "ano": "2012", "mes": "08", "carteira": "CARTAO", "valor": 81081.0}, {"ano_mes": "2012-09", "ano": "2012", "mes": "09", "carteira": "CARTAO", "valor": 69039.95}, {"ano_mes": "2012-10", "ano": "2012", "mes": "10", "carteira": "CARTAO", "valor": 86328.84}, {"ano_mes": "2012-11", "ano": "2012", "mes": "11", "carteira": "CARTAO", "valor": 103250.05}, {"ano_mes": "2012-12", "ano": "2012", "mes": "12", "carteira": "CARTAO", "valor": 119596.5}, {"ano_mes": "2013-01", "ano": "2013", "mes": "01", "carteira": "CARTAO", "valor": 95249.0}, {"ano_mes": "2013-02", "ano": "2013", "mes": "02", "carteira": "CARTAO", "valor": 89173.5}, {"ano_mes": "2013-03", "ano": "2013", "mes": "03", "carteira": "CARTAO", "valor": 105333.77}, {"ano_mes": "2013-04", "ano": "2013", "mes": "04", "carteira": "CARTAO", "valor": 82673.03}, {"ano_mes": "2013-05", "ano": "2013", "mes": "05", "carteira": "CARTAO", "valor": 90895.0}, {"ano_mes": "2013-06", "ano": "2013", "mes": "06", "carteira": "CARTAO", "valor": 90468.8}, {"ano_mes": "2013-07", "ano": "2013", "mes": "07", "carteira": "CARTAO", "valor": 114327.9}, {"ano_mes": "2013-08", "ano": "2013", "mes": "08", "carteira": "CARTAO", "valor": 94728.7}, {"ano_mes": "2013-09", "ano": "2013", "mes": "09", "carteira": "CARTAO", "valor": 80574.51}, {"ano_mes": "2013-10", "ano": "2013", "mes": "10", "carteira": "CARTAO", "valor": 99505.45}, {"ano_mes": "2013-11", "ano": "2013", "mes": "11", "carteira": "CARTAO", "valor": 101722.27}, {"ano_mes": "2013-12", "ano": "2013", "mes": "12", "carteira": "CARTAO", "valor": 167624.25}, {"ano_mes": "2014-01", "ano": "2014", "mes": "01", "carteira": "CARTAO", "valor": 110398.32}, {"ano_mes": "2014-02", "ano": "2014", "mes": "02", "carteira": "CARTAO", "valor": 93426.01000000001}, {"ano_mes": "2014-03", "ano": "2014", "mes": "03", "carteira": "CARTAO", "valor": 110516.22}, {"ano_mes": "2014-04", "ano": "2014", "mes": "04", "carteira": "CARTAO", "valor": 105458.67}, {"ano_mes": "2014-05", "ano": "2014", "mes": "05", "carteira": "CARTAO", "valor": 116724.76}, {"ano_mes": "2014-06", "ano": "2014", "mes": "06", "carteira": "CARTAO", "valor": 93640.73}, {"ano_mes": "2014-07", "ano": "2014", "mes": "07", "carteira": "CARTAO", "valor": 110536.59000000001}, {"ano_mes": "2014-08", "ano": "2014", "mes": "08", "carteira": "CARTAO", "valor": 101801.94999999998}, {"ano_mes": "2014-09", "ano": "2014", "mes": "09", "carteira": "CARTAO", "valor": 125207.74}, {"ano_mes": "2014-10", "ano": "2014", "mes": "10", "carteira": "CARTAO", "valor": 107858.0}, {"ano_mes": "2014-11", "ano": "2014", "mes": "11", "carteira": "CARTAO", "valor": 87552.78}, {"ano_mes": "2014-12", "ano": "2014", "mes": "12", "carteira": "CARTAO", "valor": 46487.55}, {"ano_mes": "2015-01", "ano": "2015", "mes": "01", "carteira": "CARTAO", "valor": 41734.01}, {"ano_mes": "2015-02", "ano": "2015", "mes": "02", "carteira": "CARTAO", "valor": 47192.5}, {"ano_mes": "2015-03", "ano": "2015", "mes": "03", "carteira": "CARTAO", "valor": 61262.67}, {"ano_mes": "2015-04", "ano": "2015", "mes": "04", "carteira": "CARTAO", "valor": 54991.11}, {"ano_mes": "2015-05", "ano": "2015", "mes": "05", "carteira": "CARTAO", "valor": 42645.619999999995}, {"ano_mes": "2015-06", "ano": "2015", "mes": "06", "carteira": "CARTAO", "valor": 44545.86}, {"ano_mes": "2015-07", "ano": "2015", "mes": "07", "carteira": "CARTAO", "valor": 49143.49999999999}, {"ano_mes": "2015-08", "ano": "2015", "mes": "08", "carteira": "CARTAO", "valor": 38606.61}, {"ano_mes": "2015-09", "ano": "2015", "mes": "09", "carteira": "CARTAO", "valor": 49985.42}, {"ano_mes": "2015-10", "ano": "2015", "mes": "10", "carteira": "CARTAO", "valor": 32234.029999999995}, {"ano_mes": "2015-11", "ano": "2015", "mes": "11", "carteira": "CARTAO", "valor": 36705.37}, {"ano_mes": "2015-12", "ano": "2015", "mes": "12", "carteira": "CARTAO", "valor": 73210.63}, {"ano_mes": "2016-01", "ano": "2016", "mes": "01", "carteira": "CARTAO", "valor": 38277.649999999994}, {"ano_mes": "2016-02", "ano": "2016", "mes": "02", "carteira": "CARTAO", "valor": 37830.24}, {"ano_mes": "2016-03", "ano": "2016", "mes": "03", "carteira": "CARTAO", "valor": 69242.52000000002}, {"ano_mes": "2016-04", "ano": "2016", "mes": "04", "carteira": "CARTAO", "valor": 67673.95000000001}, {"ano_mes": "2016-05", "ano": "2016", "mes": "05", "carteira": "CARTAO", "valor": 58549.62999999999}, {"ano_mes": "2016-06", "ano": "2016", "mes": "06", "carteira": "CARTAO", "valor": 49687.46000000001}, {"ano_mes": "2016-07", "ano": "2016", "mes": "07", "carteira": "CARTAO", "valor": 38387.45}, {"ano_mes": "2016-08", "ano": "2016", "mes": "08", "carteira": "CARTAO", "valor": 53645.06}, {"ano_mes": "2016-09", "ano": "2016", "mes": "09", "carteira": "CARTAO", "valor": 45158.76}, {"ano_mes": "2016-10", "ano": "2016", "mes": "10", "carteira": "CARTAO", "valor": 62662.92}, {"ano_mes": "2016-11", "ano": "2016", "mes": "11", "carteira": "CARTAO", "valor": 59348.20999999999}, {"ano_mes": "2016-12", "ano": "2016", "mes": "12", "carteira": "CARTAO", "valor": 52854.719999999994}, {"ano_mes": "2017-01", "ano": "2017", "mes": "01", "carteira": "CARTAO", "valor": 53471.23999999999}, {"ano_mes": "2017-02", "ano": "2017", "mes": "02", "carteira": "CARTAO", "valor": 58561.020000000004}, {"ano_mes": "2017-03", "ano": "2017", "mes": "03", "carteira": "CARTAO", "valor": 66362.38}, {"ano_mes": "2017-04", "ano": "2017", "mes": "04", "carteira": "CARTAO", "valor": 55831.91}, {"ano_mes": "2017-05", "ano": "2017", "mes": "05", "carteira": "CARTAO", "valor": 58625.71000000001}, {"ano_mes": "2017-06", "ano": "2017", "mes": "06", "carteira": "CARTAO", "valor": 54683.66000000001}, {"ano_mes": "2017-07", "ano": "2017", "mes": "07", "carteira": "CARTAO", "valor": 73629.91}, {"ano_mes": "2017-08", "ano": "2017", "mes": "08", "carteira": "CARTAO", "valor": 53263.69}, {"ano_mes": "2017-09", "ano": "2017", "mes": "09", "carteira": "CARTAO", "valor": 55089.64}, {"ano_mes": "2017-10", "ano": "2017", "mes": "10", "carteira": "CARTAO", "valor": 63404.04000000001}, {"ano_mes": "2017-11", "ano": "2017", "mes": "11", "carteira": "CARTAO", "valor": 78306.20000000001}, {"ano_mes": "2017-12", "ano": "2017", "mes": "12", "carteira": "CARTAO", "valor": 69266.81}, {"ano_mes": "2018-01", "ano": "2018", "mes": "01", "carteira": "CARTAO", "valor": 74058.61}, {"ano_mes": "2018-02", "ano": "2018", "mes": "02", "carteira": "CARTAO", "valor": 66628.65}, {"ano_mes": "2018-03", "ano": "2018", "mes": "03", "carteira": "CARTAO", "valor": 73377.56}, {"ano_mes": "2018-04", "ano": "2018", "mes": "04", "carteira": "CARTAO", "valor": 54397.03}, {"ano_mes": "2018-05", "ano": "2018", "mes": "05", "carteira": "CARTAO", "valor": 62346.350000000006}, {"ano_mes": "2018-06", "ano": "2018", "mes": "06", "carteira": "CARTAO", "valor": 59064.75}, {"ano_mes": "2018-07", "ano": "2018", "mes": "07", "carteira": "CARTAO", "valor": 68622.48999999999}, {"ano_mes": "2018-08", "ano": "2018", "mes": "08", "carteira": "CARTAO", "valor": 66462.4}, {"ano_mes": "2018-09", "ano": "2018", "mes": "09", "carteira": "CARTAO", "valor": 59947.21000000001}, {"ano_mes": "2018-10", "ano": "2018", "mes": "10", "carteira": "CARTAO", "valor": 76460.87}, {"ano_mes": "2018-11", "ano": "2018", "mes": "11", "carteira": "CARTAO", "valor": 76192.5}, {"ano_mes": "2018-12", "ano": "2018", "mes": "12", "carteira": "CARTAO", "valor": 79686.75}, {"ano_mes": "2019-01", "ano": "2019", "mes": "01", "carteira": "CARTAO", "valor": 97153.99}, {"ano_mes": "2019-02", "ano": "2019", "mes": "02", "carteira": "CARTAO", "valor": 73746.15}, {"ano_mes": "2019-03", "ano": "2019", "mes": "03", "carteira": "CARTAO", "valor": 88751.72}, {"ano_mes": "2019-04", "ano": "2019", "mes": "04", "carteira": "CARTAO", "valor": 65763.5}, {"ano_mes": "2019-05", "ano": "2019", "mes": "05", "carteira": "CARTAO", "valor": 68505.7}, {"ano_mes": "2019-06", "ano": "2019", "mes": "06", "carteira": "CARTAO", "valor": 95063.4}, {"ano_mes": "2019-07", "ano": "2019", "mes": "07", "carteira": "CARTAO", "valor": 71442.15}, {"ano_mes": "2019-08", "ano": "2019", "mes": "08", "carteira": "CARTAO", "valor": 99061.30000000002}, {"ano_mes": "2019-09", "ano": "2019", "mes": "09", "carteira": "CARTAO", "valor": 95897.0}, {"ano_mes": "2019-10", "ano": "2019", "mes": "10", "carteira": "CARTAO", "valor": 67343.85}, {"ano_mes": "2019-11", "ano": "2019", "mes": "11", "carteira": "CARTAO", "valor": 86722.5}, {"ano_mes": "2019-12", "ano": "2019", "mes": "12", "carteira": "CARTAO", "valor": 103644.6}, {"ano_mes": "2020-01", "ano": "2020", "mes": "01", "carteira": "CARTAO", "valor": 98864.23000000001}, {"ano_mes": "2020-02", "ano": "2020", "mes": "02", "carteira": "CARTAO", "valor": 76949.7}, {"ano_mes": "2020-03", "ano": "2020", "mes": "03", "carteira": "CARTAO", "valor": 68461.0}, {"ano_mes": "2020-04", "ano": "2020", "mes": "04", "carteira": "CARTAO", "valor": 59309.34}, {"ano_mes": "2020-05", "ano": "2020", "mes": "05", "carteira": "CARTAO", "valor": 65094.4}, {"ano_mes": "2020-06", "ano": "2020", "mes": "06", "carteira": "CARTAO", "valor": 65093.4}, {"ano_mes": "2020-07", "ano": "2020", "mes": "07", "carteira": "CARTAO", "valor": 65087.0}, {"ano_mes": "2020-08", "ano": "2020", "mes": "08", "carteira": "CARTAO", "valor": 87073.22}, {"ano_mes": "2020-09", "ano": "2020", "mes": "09", "carteira": "CARTAO", "valor": 90231.0}, {"ano_mes": "2020-10", "ano": "2020", "mes": "10", "carteira": "CARTAO", "valor": 97702.93}, {"ano_mes": "2020-11", "ano": "2020", "mes": "11", "carteira": "CARTAO", "valor": 105088.90000000001}, {"ano_mes": "2020-12", "ano": "2020", "mes": "12", "carteira": "CARTAO", "valor": 102596.9}, {"ano_mes": "2021-01", "ano": "2021", "mes": "01", "carteira": "CARTAO", "valor": 61593.55}, {"ano_mes": "2021-02", "ano": "2021", "mes": "02", "carteira": "CARTAO", "valor": 80395.34}, {"ano_mes": "2021-03", "ano": "2021", "mes": "03", "carteira": "CARTAO", "valor": 79106.72}, {"ano_mes": "2021-04", "ano": "2021", "mes": "04", "carteira": "CARTAO", "valor": 96607.5}, {"ano_mes": "2021-05", "ano": "2021", "mes": "05", "carteira": "CARTAO", "valor": 111512.08}, {"ano_mes": "2021-06", "ano": "2021", "mes": "06", "carteira": "CARTAO", "valor": 72130.94}, {"ano_mes": "2021-07", "ano": "2021", "mes": "07", "carteira": "CARTAO", "valor": 94599.0}, {"ano_mes": "2021-08", "ano": "2021", "mes": "08", "carteira": "CARTAO", "valor": 105128.0}, {"ano_mes": "2021-09", "ano": "2021", "mes": "09", "carteira": "CARTAO", "valor": 85913.21999999999}, {"ano_mes": "2021-10", "ano": "2021", "mes": "10", "carteira": "CARTAO", "valor": 92567.6}, {"ano_mes": "2021-11", "ano": "2021", "mes": "11", "carteira": "CARTAO", "valor": 108360.61}, {"ano_mes": "2021-12", "ano": "2021", "mes": "12", "carteira": "CARTAO", "valor": 109177.5}, {"ano_mes": "2022-01", "ano": "2022", "mes": "01", "carteira": "CARTAO", "valor": 87585.5}, {"ano_mes": "2022-02", "ano": "2022", "mes": "02", "carteira": "CARTAO", "valor": 140369.68}, {"ano_mes": "2022-03", "ano": "2022", "mes": "03", "carteira": "CARTAO", "valor": 120586.93}, {"ano_mes": "2022-04", "ano": "2022", "mes": "04", "carteira": "CARTAO", "valor": 94934.69}, {"ano_mes": "2022-05", "ano": "2022", "mes": "05", "carteira": "CARTAO", "valor": 147215.16}, {"ano_mes": "2022-06", "ano": "2022", "mes": "06", "carteira": "CARTAO", "valor": 115184.09000000001}, {"ano_mes": "2022-07", "ano": "2022", "mes": "07", "carteira": "CARTAO", "valor": 122306.07}, {"ano_mes": "2022-08", "ano": "2022", "mes": "08", "carteira": "CARTAO", "valor": 109931.92000000001}, {"ano_mes": "2022-09", "ano": "2022", "mes": "09", "carteira": "CARTAO", "valor": 109139.5}, {"ano_mes": "2022-10", "ano": "2022", "mes": "10", "carteira": "CARTAO", "valor": 123911.28}, {"ano_mes": "2022-11", "ano": "2022", "mes": "11", "carteira": "CARTAO", "valor": 94898.90000000001}, {"ano_mes": "2022-12", "ano": "2022", "mes": "12", "carteira": "CARTAO", "valor": 96992.17}, {"ano_mes": "2023-01", "ano": "2023", "mes": "01", "carteira": "CARTAO", "valor": 127915.5}, {"ano_mes": "2023-02", "ano": "2023", "mes": "02", "carteira": "CARTAO", "valor": 127541.5}, {"ano_mes": "2023-03", "ano": "2023", "mes": "03", "carteira": "CARTAO", "valor": 129782.03000000001}, {"ano_mes": "2023-04", "ano": "2023", "mes": "04", "carteira": "CARTAO", "valor": 85948.7}, {"ano_mes": "2023-05", "ano": "2023", "mes": "05", "carteira": "CARTAO", "valor": 128306.75}, {"ano_mes": "2023-06", "ano": "2023", "mes": "06", "carteira": "CARTAO", "valor": 120751.45}, {"ano_mes": "2023-07", "ano": "2023", "mes": "07", "carteira": "CARTAO", "valor": 135544.84}, {"ano_mes": "2023-08", "ano": "2023", "mes": "08", "carteira": "CARTAO", "valor": 123310.92}, {"ano_mes": "2023-09", "ano": "2023", "mes": "09", "carteira": "CARTAO", "valor": 122194.81000000001}, {"ano_mes": "2023-10", "ano": "2023", "mes": "10", "carteira": "CARTAO", "valor": 126817.78000000001}, {"ano_mes": "2023-11", "ano": "2023", "mes": "11", "carteira": "CARTAO", "valor": 106164.49999999999}, {"ano_mes": "2023-12", "ano": "2023", "mes": "12", "carteira": "CARTAO", "valor": 126248.1}, {"ano_mes": "2024-01", "ano": "2024", "mes": "01", "carteira": "CARTAO", "valor": 138674.82000000004}, {"ano_mes": "2024-02", "ano": "2024", "mes": "02", "carteira": "CARTAO", "valor": 143202.85000000003}, {"ano_mes": "2024-03", "ano": "2024", "mes": "03", "carteira": "CARTAO", "valor": 142439.95}, {"ano_mes": "2024-04", "ano": "2024", "mes": "04", "carteira": "CARTAO", "valor": 154528.40000000002}, {"ano_mes": "2024-05", "ano": "2024", "mes": "05", "carteira": "CARTAO", "valor": 138375.1}, {"ano_mes": "2024-06", "ano": "2024", "mes": "06", "carteira": "CARTAO", "valor": 136234.29}, {"ano_mes": "2024-07", "ano": "2024", "mes": "07", "carteira": "CARTAO", "valor": 178052.09000000003}, {"ano_mes": "2024-08", "ano": "2024", "mes": "08", "carteira": "CARTAO", "valor": 216420.53}, {"ano_mes": "2024-09", "ano": "2024", "mes": "09", "carteira": "CARTAO", "valor": 247537.5399999998}, {"ano_mes": "2024-10", "ano": "2024", "mes": "10", "carteira": "CARTAO", "valor": 224471.35999999964}, {"ano_mes": "2024-11", "ano": "2024", "mes": "11", "carteira": "CARTAO", "valor": 351038.81000000023}, {"ano_mes": "2024-12", "ano": "2024", "mes": "12", "carteira": "CARTAO", "valor": 323532.2300000009}, {"ano_mes": "2025-01", "ano": "2025", "mes": "01", "carteira": "CARTAO", "valor": 357620.4399999988}, {"ano_mes": "2025-02", "ano": "2025", "mes": "02", "carteira": "CARTAO", "valor": 266495.28000000067}, {"ano_mes": "2025-03", "ano": "2025", "mes": "03", "carteira": "CARTAO", "valor": 327413.39000000025}, {"ano_mes": "2025-04", "ano": "2025", "mes": "04", "carteira": "CARTAO", "valor": 357914.3399999989}, {"ano_mes": "2025-05", "ano": "2025", "mes": "05", "carteira": "CARTAO", "valor": 361747.8300000004}, {"ano_mes": "2025-06", "ano": "2025", "mes": "06", "carteira": "CARTAO", "valor": 392407.16000000027}, {"ano_mes": "2025-07", "ano": "2025", "mes": "07", "carteira": "CARTAO", "valor": 395635.9299999999}, {"ano_mes": "2025-08", "ano": "2025", "mes": "08", "carteira": "CARTAO", "valor": 407417.9400000001}, {"ano_mes": "2025-09", "ano": "2025", "mes": "09", "carteira": "CARTAO", "valor": 410932.37999999826}, {"ano_mes": "2025-10", "ano": "2025", "mes": "10", "carteira": "CARTAO", "valor": 371673.32999999967}, {"ano_mes": "2025-11", "ano": "2025", "mes": "11", "carteira": "CARTAO", "valor": 363004.45000000106}, {"ano_mes": "2025-12", "ano": "2025", "mes": "12", "carteira": "CARTAO", "valor": 409664.0400000002}, {"ano_mes": "2026-01", "ano": "2026", "mes": "01", "carteira": "CARTAO", "valor": 423726.26999999885}, {"ano_mes": "2026-02", "ano": "2026", "mes": "02", "carteira": "CARTAO", "valor": 423410.12999999995}, {"ano_mes": "2026-03", "ano": "2026", "mes": "03", "carteira": "CARTAO", "valor": 555220.0499999999}, {"ano_mes": "2026-04", "ano": "2026", "mes": "04", "carteira": "CARTAO", "valor": 539176.6499999971}, {"ano_mes": "2026-05", "ano": "2026", "mes": "05", "carteira": "CARTAO", "valor": 306624.80999999976}];
+var CLIENTES_MENSAL = [{"ano_mes": "2022-01", "qtd_clientes": 281}, {"ano_mes": "2022-02", "qtd_clientes": 287}, {"ano_mes": "2022-03", "qtd_clientes": 295}, {"ano_mes": "2022-04", "qtd_clientes": 312}, {"ano_mes": "2022-05", "qtd_clientes": 318}, {"ano_mes": "2022-06", "qtd_clientes": 292}, {"ano_mes": "2022-07", "qtd_clientes": 244}, {"ano_mes": "2022-08", "qtd_clientes": 258}, {"ano_mes": "2022-09", "qtd_clientes": 278}, {"ano_mes": "2022-10", "qtd_clientes": 266}, {"ano_mes": "2022-11", "qtd_clientes": 311}, {"ano_mes": "2022-12", "qtd_clientes": 338}, {"ano_mes": "2023-01", "qtd_clientes": 341}, {"ano_mes": "2023-02", "qtd_clientes": 270}, {"ano_mes": "2023-03", "qtd_clientes": 326}, {"ano_mes": "2023-04", "qtd_clientes": 276}, {"ano_mes": "2023-05", "qtd_clientes": 320}, {"ano_mes": "2023-06", "qtd_clientes": 274}, {"ano_mes": "2023-07", "qtd_clientes": 333}, {"ano_mes": "2023-08", "qtd_clientes": 281}, {"ano_mes": "2023-09", "qtd_clientes": 271}, {"ano_mes": "2023-10", "qtd_clientes": 294}, {"ano_mes": "2023-11", "qtd_clientes": 287}, {"ano_mes": "2023-12", "qtd_clientes": 336}, {"ano_mes": "2024-01", "qtd_clientes": 296}, {"ano_mes": "2024-02", "qtd_clientes": 293}, {"ano_mes": "2024-03", "qtd_clientes": 312}, {"ano_mes": "2024-04", "qtd_clientes": 338}, {"ano_mes": "2024-05", "qtd_clientes": 304}, {"ano_mes": "2024-06", "qtd_clientes": 261}, {"ano_mes": "2024-07", "qtd_clientes": 335}, {"ano_mes": "2024-08", "qtd_clientes": 267}, {"ano_mes": "2024-09", "qtd_clientes": 242}, {"ano_mes": "2024-10", "qtd_clientes": 299}, {"ano_mes": "2024-11", "qtd_clientes": 299}, {"ano_mes": "2024-12", "qtd_clientes": 328}, {"ano_mes": "2025-01", "qtd_clientes": 326}, {"ano_mes": "2025-02", "qtd_clientes": 263}, {"ano_mes": "2025-03", "qtd_clientes": 299}, {"ano_mes": "2025-04", "qtd_clientes": 288}, {"ano_mes": "2025-05", "qtd_clientes": 280}, {"ano_mes": "2025-06", "qtd_clientes": 273}, {"ano_mes": "2025-07", "qtd_clientes": 303}, {"ano_mes": "2025-08", "qtd_clientes": 287}, {"ano_mes": "2025-09", "qtd_clientes": 293}, {"ano_mes": "2025-10", "qtd_clientes": 290}, {"ano_mes": "2025-11", "qtd_clientes": 267}, {"ano_mes": "2025-12", "qtd_clientes": 370}, {"ano_mes": "2026-01", "qtd_clientes": 347}, {"ano_mes": "2026-02", "qtd_clientes": 324}, {"ano_mes": "2026-03", "qtd_clientes": 352}, {"ano_mes": "2026-04", "qtd_clientes": 304}, {"ano_mes": "2026-05", "qtd_clientes": 212}];
+var INDICE_RECEB = [{"ano": "2023", "vendas": 4780963.56, "recebido": 1458576.88, "indice_pct": 30.5}, {"ano": "2024", "vendas": 5778452.98, "recebido": 2377690.37, "indice_pct": 41.1}, {"ano": "2025", "vendas": 5248112.47, "recebido": 4158787.97, "indice_pct": 79.2}, {"ano": "2026", "vendas": 2444672.27, "recebido": 1030967.89, "indice_pct": 42.2}];
+var ANO_ATUAL = "2026";
+var MES_ATUAL = 5;
+var MESES_L   = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+var ANOS_DISP = ["2026", "2025"];
+var COR       = "#6366f1";
+var modoAnual = "venda";
+var chartM = null, chartA = null;
+
+// Função de formatação de números (K, M, B)
+function fmtNum(valor){
+  var abs = Math.abs(valor);
+  var num, sufixo;
+  if(abs >= 1e9){ num = valor / 1e9; sufixo = "B"; }
+  else if(abs >= 1e6){ num = valor / 1e6; sufixo = "M"; }
+  else if(abs >= 1e3){ num = valor / 1e3; sufixo = "K"; }
+  else return valor.toFixed(0);
+  var absNum = Math.abs(num);
+  if(absNum < 10) return num.toFixed(2) + sufixo;
+  if(absNum < 100) return num.toFixed(1) + sufixo;
+  return num.toFixed(0) + sufixo;
+}
+
+// Popular seletor de empresa
+var selEmp = document.getElementById("f-empresa");
+var empresas = [{"id": "1", "nome": "COMERCIAL DE PNEUS SANT ANA EIRELI - ME"}, {"id": "999", "nome": "TODAS"}];
+empresas.forEach(function(e){
+  var o=document.createElement("option"); o.value=e.id; o.textContent=e.nome;
+  selEmp.appendChild(o);
+});
+
+// Popular seletor de ano
+var selAno = document.getElementById("f-ano");
+ANOS_DISP.forEach(function(a){
+  var o=document.createElement("option"); o.value=a; o.textContent=a;
+  if(a==="2026") o.selected=true;
+  selAno.appendChild(o);
+});
+
+var COPTS = {
+  responsive:true, maintainAspectRatio:false,
+  plugins:{
+    legend:{display:false},
+    tooltip:{backgroundColor:"#1e293b",borderColor:"#334155",borderWidth:1,
+      titleFont:{family:"Plus Jakarta Sans",size:11},bodyFont:{family:"Plus Jakarta Sans",size:11},
+      callbacks:{label:function(c){
+        return " "+c.dataset.label+": R$ "+(c.parsed.y||0).toLocaleString("pt-BR",{minimumFractionDigits:0});
+      }}
+    }
+  },
+  scales:{
+    x:{grid:{color:"rgba(0,0,0,.04)"},ticks:{color:"#94a3b8",font:{family:"Plus Jakarta Sans",size:10}}},
+    y:{grid:{color:"rgba(0,0,0,.04)"},ticks:{color:"#94a3b8",font:{family:"Plus Jakarta Sans",size:10},
+        callback:function(v){return "R$"+(v/1000).toFixed(0)+"k";}}}
+  }
+};
+
+function toggleAnual(modo){
+  modoAnual = modo;
+  document.getElementById("btn-venda").classList.toggle("active", modo==="venda");
+  document.getElementById("btn-margem").classList.toggle("active", modo==="margem");
+  document.getElementById("sub-anual").textContent = modo==="venda" ? "Faturamento anual" : "Margem bruta % por ano";
+  renderChartAnual();
+}
+
+var anualLabelsPlugin = {
+  id: "anualLabels",
+  afterDatasetsDraw: function(chart){
+    var ctx = chart.ctx;
+    chart.data.datasets.forEach(function(ds, di){
+      var meta = chart.getDatasetMeta(di);
+      if(meta.hidden) return;
+      // Só desenhar rótulo se _showLabel for true (ou não definido para retrocompatibilidade)
+      if(ds._showLabel === false) return;
+      meta.data.forEach(function(el, i){
+        var val = ds.data[i];
+        if(val === null || val === undefined) return;
+        var x = el.x, y = el.y;
+        ctx.save();
+        ctx.font = "700 10px 'Plus Jakarta Sans', sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "bottom";
+        ctx.fillStyle = "#0284c7";
+        if(ds._isMargem){
+          ctx.fillText(val.toFixed(1)+"%", x, y - 8);
+        } else {
+          ctx.fillText(fmtNum(val), x, y - 4);
+        }
+        ctx.restore();
+      });
+    });
+  }
+};
+
+function makeGrad(chart){
+  var ca = chart.chartArea;
+  if(!ca) return "#0ea5e9";
+  var g = chart.ctx.createLinearGradient(0, ca.top, 0, ca.bottom);
+  g.addColorStop(0, "#06b6d4");
+  g.addColorStop(1, "#3b82f6");
+  return g;
+}
+
+var OPTS_ANUAL_BASE = {
+  responsive: true, maintainAspectRatio: false,
+  interaction: { mode:"index", intersect:false },
+  layout: { padding: { top: 32, left: 8, right: 8, bottom: 4 } },
+  plugins: {
+    legend: { display: false },
+    tooltip: { enabled: false }
+  },
+  scales: {
+    x: {
+      grid: { display: false },
+      border: { display: false },
+      ticks: { color:"#94a3b8", font:{ family:"Plus Jakarta Sans", size:11, weight:"600" } }
+    },
+    y: { display: false }
+  }
+};
+
+function renderChartAnual(){
+  if(chartA) chartA.destroy();
+  var canvas = document.getElementById("chartAnual");
+  var anos = ANUAL5.map(function(d){ return d.ano; });
+  if(modoAnual === "venda"){
+    chartA = new Chart(canvas, {
+      type: "bar",
+      plugins: [anualLabelsPlugin],
+      data: {
+        labels: anos,
+        datasets: [{
+          label: "Faturamento", _isMargem: false,
+          data: ANUAL5.map(function(d){ return d.faturamento; }),
+          backgroundColor: function(ctx){ return makeGrad(ctx.chart); },
+          borderRadius: 10, borderSkipped: false
+        }]
+      },
+      options: OPTS_ANUAL_BASE
+    });
+  } else {
+    var optsM = Object.assign({}, OPTS_ANUAL_BASE, {
+      onClick: function(evt, elements){
+        if(!elements.length) return;
+        var idx = elements[0].index;
+        var ano = ANUAL5[idx].ano;
+        abrirModalMargem(ano);
+      },
+      onHover: function(evt, elements){
+        evt.native.target.style.cursor = elements.length ? "pointer" : "default";
+      },
+      plugins: {
+        legend: {
+          display: true,
+          position: "bottom",
+          labels: {
+            color: "#64748b",
+            font: { family: "Plus Jakarta Sans", size: 11, weight: "600" },
+            padding: 12,
+            usePointStyle: true,
+            pointStyle: "line"
+          }
+        }
+      }
+    });
+    chartA = new Chart(canvas, {
+      type: "line",
+      plugins: [anualLabelsPlugin],
+      data: {
+        labels: anos,
+        datasets: [{
+          label: "Margem % Realizado", _isMargem: true, _showLabel: true,
+          data: ANUAL5.map(function(d){ return d.margem_pct; }),
+          borderColor: "#0ea5e9", borderWidth: 3,
+          pointBackgroundColor: "#06b6d4", pointBorderColor: "#fff", pointBorderWidth: 2,
+          pointRadius: 7, pointHoverRadius: 9, tension: 0.35,
+          fill: { target: "origin", above: "rgba(6,182,212,0.12)" }
+        }, {
+          label: "Margem % Orçamento", _isMargem: true, _showLabel: false,
+          data: anos.map(function(ano){
+            // Filtrar orçamento do ano
+            var orcAno = ORCAMENTO.filter(function(o){ return o.ano_mes && o.ano_mes.startsWith(ano); });
+            if(orcAno.length === 0) return null;
+            
+            // CÁLCULO CORRETO: (SOMA_VENDAS + SOMA_CMV) / SOMA_VENDAS
+            // CMV já vem negativo do banco
+            var somaVendas = 0;
+            var somaCmv = 0;
+            
+            orcAno.forEach(function(o){
+              if(o.orcamento) somaVendas += o.orcamento;
+              if(o.cmv) somaCmv += o.cmv;
+            });
+            
+            if(somaVendas === 0) return null;
+            return ((somaVendas + somaCmv) / somaVendas) * 100;
+          }),
+          borderColor: "#eab308", borderWidth: 2.5,
+          borderDash: [6, 4],
+          pointBackgroundColor: "#fbbf24", pointBorderColor: "#fff", pointBorderWidth: 2,
+          pointRadius: 5, pointHoverRadius: 7, tension: 0.35,
+          fill: false
+        }]
+      },
+      options: optsM
+    });
+  }
+}
+
+var chartModal = null;
+
+function abrirModalMargem(ano){
+  var meses = MENSAL_R.filter(function(d){ return d.ano_mes.startsWith(ano); });
+  var labels = meses.map(function(d){
+    var m = parseInt(d.ano_mes.split("-")[1]);
+    return ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"][m-1];
+  });
+  var valores = meses.map(function(d){ return d.margem_pct; });
+  
+  // Filtrar orçamento do ano
+  var orc = ORCAMENTO.filter(function(d){ return d.ano_mes && d.ano_mes.startsWith(ano); });
+  var valoresOrc = labels.map(function(label, i){
+    var ano_mes = meses[i] ? meses[i].ano_mes : null;
+    if(!ano_mes) return null;
+    var item = orc.find(function(o){ return o.ano_mes === ano_mes; });
+    return item ? item.margem_pct : null;  // Usar margem_pct calculada
+  });
+  
+  // ═══════════════════════════════════════════════════════════
+  // DEBUG: Análise completa dos dados de margem
+  // ═══════════════════════════════════════════════════════════
+  console.log("\n" + "=".repeat(60));
+  console.log("DEBUG MODAL MARGEM - Ano: " + ano);
+  console.log("=".repeat(60));
+  
+  console.log("\n1️⃣ DADOS REALIZADOS (MENSAL_R):");
+  console.log("Total de meses no ano:", meses.length);
+  meses.forEach(function(m, i){
+    console.log("  [" + (i+1) + "] " + m.ano_mes + ":", {
+      faturamento: m.faturamento,
+      custo: m.custo,
+      margem_pct: m.margem_pct + "%",
+      calculo: m.faturamento > 0 ? 
+        "(" + m.faturamento + " - " + m.custo + ") / " + m.faturamento + " × 100" : "N/A"
+    });
+  });
+  
+  console.log("\n2️⃣ DADOS ORÇADOS (ORCAMENTO):");
+  console.log("Total registros orçamento ano:", orc.length);
+  console.log("\nTODOS os registros de orçamento:");
+  ORCAMENTO.forEach(function(o, i){
+    console.log("  [" + (i+1) + "] " + o.ano_mes + ":", {
+      orcamento_vendas: o.orcamento,
+      margem_pct: o.margem_pct + "%",
+      empresa_id: o.empresa_id
+    });
+  });
+  
+  console.log("\n3️⃣ MATCH REALIZADO vs ORÇADO:");
+  labels.forEach(function(label, i){
+    var ano_mes = meses[i] ? meses[i].ano_mes : null;
+    var real = valores[i];
+    var orc_val = valoresOrc[i];
+    var item = ano_mes ? orc.find(function(o){ return o.ano_mes === ano_mes; }) : null;
+    
+    console.log("  " + label + " (" + ano_mes + "):", {
+      realizado: real ? real.toFixed(2) + "%" : "null",
+      orcado: orc_val ? orc_val.toFixed(2) + "%" : "null",
+      encontrou_orc: item ? "✅ SIM" : "❌ NÃO",
+      dados_orc: item || "---"
+    });
+  });
+  
+  console.log("\n4️⃣ ARRAYS FINAIS PARA GRÁFICO:");
+  console.log("Labels:", labels);
+  console.log("Realizado:", valores.map(function(v){ return v ? v.toFixed(2)+"%" : "null"; }));
+  console.log("Orçado:", valoresOrc.map(function(v){ return v ? v.toFixed(2)+"%" : "null"; }));
+  console.log("=".repeat(60) + "\n");
+  // ═══════════════════════════════════════════════════════════
+  
+  document.getElementById("modal-titulo").textContent = "Margem % — " + ano;
+  document.getElementById("modal-sub").textContent = "Realizado vs Orçamento · clique fora para fechar";
+  document.getElementById("modal-margem").classList.add("open");
+  if(chartModal) chartModal.destroy();
+  var modalPlugin = {
+    id: "modalLabels",
+    afterDatasetsDraw: function(chart){
+      var ctx = chart.ctx;
+      
+      // Desenhar rótulos APENAS no realizado (dataset 0)
+      var meta = chart.getDatasetMeta(0);
+      if(!meta.hidden){
+        meta.data.forEach(function(el, i){
+          var val = chart.data.datasets[0].data[i];
+          if(val === null || val === undefined) return;
+          
+          ctx.save();
+          ctx.font = "700 10px 'Plus Jakarta Sans', sans-serif";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "bottom";
+          ctx.fillStyle = "#0284c7";
+          ctx.fillText(val.toFixed(1)+"%", el.x, el.y - 8);
+          ctx.restore();
+        });
+      }
+    }
+  };
+  chartModal = new Chart(document.getElementById("chartModalMargem"), {
+    type: "line",
+    plugins: [modalPlugin],
+    data: {
+      labels: labels,
+      datasets: [{
+        label: "Margem % Realizado",
+        data: valores,
+        borderColor: "#0ea5e9", borderWidth: 3,
+        pointBackgroundColor: "#06b6d4", pointBorderColor: "#fff", pointBorderWidth: 2,
+        pointRadius: 6, pointHoverRadius: 8, tension: 0.35,
+        fill: { target: "origin", above: "rgba(6,182,212,0.12)" }
+      }, {
+        label: "Orçamento",
+        data: valoresOrc,
+        borderColor: "#eab308", borderWidth: 2.5,
+        borderDash: [6, 4],
+        pointBackgroundColor: "#fbbf24", pointBorderColor: "#fff", pointBorderWidth: 2,
+        pointRadius: 5, pointHoverRadius: 7, tension: 0.25,
+        fill: false
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      layout: { padding: { top: 28, left: 8, right: 8, bottom: 4 } },
+      plugins: { 
+        legend: { 
+          display: true, 
+          position: "bottom",
+          labels: { 
+            color: "#64748b", 
+            font: { family: "Plus Jakarta Sans", size: 11, weight: "600" },
+            padding: 12,
+            usePointStyle: true,
+            pointStyle: "line"
+          }
+        }, 
+        tooltip: {
+          enabled: true,
+          backgroundColor: "#1e293b",
+          borderColor: "#334155",
+          borderWidth: 1,
+          titleFont: { family: "Plus Jakarta Sans", size: 12, weight: "700" },
+          bodyFont: { family: "Plus Jakarta Sans", size: 11 },
+          padding: 10,
+          displayColors: true,
+          callbacks: {
+            label: function(context){
+              return " " + context.dataset.label + ": " + context.parsed.y.toFixed(1) + "%";
+            }
+          }
+        }
+      },
+      scales: {
+        x: { grid: { display: false }, border: { display: false },
+             ticks: { color: "#94a3b8", font: { family: "Plus Jakarta Sans", size: 11, weight: "600" } } },
+        y: { 
+          min: 0,
+          display: false 
+        }
+      }
+    }
+  });
+}
+
+function fecharModal(){
+  document.getElementById("modal-margem").classList.remove("open");
+  if(chartModal){ chartModal.destroy(); chartModal = null; }
+}
+document.getElementById("modal-margem").addEventListener("click", function(e){
+  if(e.target === this) fecharModal();
+});
+
+function aplicarFiltros(){
+  var anoBase = document.getElementById("f-ano").value;
+  var anoAnt  = String(parseInt(anoBase)-1);
+  var empresaId = document.getElementById("f-empresa").value;
+
+  // Atualizar legendas
+  document.getElementById("leg-base").textContent = anoBase;
+  document.getElementById("leg-ant").textContent  = anoAnt;
+  document.getElementById("sub-mensal").textContent = anoBase+" vs "+anoAnt;
+
+  // Montar arrays mensais
+  var fBase = new Array(12).fill(0);
+  var fProj = new Array(12).fill(0);  // Projeção (só mês atual)
+  var fAnt  = new Array(12).fill(0);
+  var metas = new Array(12).fill(null);
+  
+  var hoje = new Date();
+  var mesAtual = hoje.getMonth() + 1;  // 1-12
+  var anoAtual = hoje.getFullYear();
+  
+  // Usar data de atualização dos dados para projeção
+  var dataAtualizacao = '21/05/2026';  // dd/mm/yyyy
+  var partes = dataAtualizacao.split("/");
+  var diaAtualizado = parseInt(partes[0]);
+  var mesAtualizado = parseInt(partes[1]);
+  var anoAtualizado = parseInt(partes[2]);
+  
+  var diasDecorridos = diaAtualizado;
+  if(diasDecorridos < 1) diasDecorridos = 1;
+  
+  MENSAL_R.forEach(function(d){
+    var ym = d.ano_mes.split("-"), idx = parseInt(ym[1])-1;
+    if(ym[0]===anoBase) {
+      fBase[idx]=d.faturamento;
+      
+      // Calcular projeção se for mês atual e ano base = ano atual
+      if(anoBase === String(anoAtual) && parseInt(ym[1]) === mesAtual && d.faturamento > 0){
+        var diasNoMes = new Date(anoAtual, mesAtual, 0).getDate();
+        var projecaoTotal = (d.faturamento / diasDecorridos) * diasNoMes;
+        var projecaoRestante = projecaoTotal - d.faturamento;
+        fProj[idx] = projecaoRestante > 0 ? projecaoRestante : 0;
+      }
+    }
+    if(ym[0]===anoAnt)  fAnt[idx] =d.faturamento;
+  });
+  ORCAMENTO.forEach(function(d){
+    var ym = d.ano_mes.split("-"), idx = parseInt(ym[1])-1;
+    if(ym[0]===anoBase && d.empresa_id===empresaId) metas[idx]=d.orcamento;
+  });
+
+  if(chartM) chartM.destroy();
+  chartM = new Chart(document.getElementById("chartMensal"),{
+    data:{
+      labels: MESES_L,
+      datasets:[
+        {type:"bar",  label:anoBase+" Realizado", data:fBase, stack:"base",
+          backgroundColor: function(ctx){ 
+            var ca = ctx.chart.chartArea;
+            if(!ca) return "#0ea5e9";
+            var g = ctx.chart.ctx.createLinearGradient(0, ca.top, 0, ca.bottom);
+            g.addColorStop(0, "#06b6d4");
+            g.addColorStop(1, "#3b82f6");
+            return g;
+          },
+          borderRadius:{topLeft:0,topRight:0,bottomLeft:4,bottomRight:4},borderSkipped:false},
+        {type:"bar",  label:anoBase+" Projeção", data:fProj, stack:"base",
+          backgroundColor:"#94a3b855",
+          borderColor:"#64748b",borderWidth:1,borderDash:[4,4],
+          borderRadius:{topLeft:4,topRight:4,bottomLeft:0,bottomRight:0},borderSkipped:false},
+        {type:"bar",  label:anoAnt,  data:fAnt, stack:"ant", backgroundColor:"#f97316aa", borderRadius:4,borderSkipped:false},
+        {type:"line", label:"Meta",  data:metas,
+          borderColor:"#fbbf24",borderWidth:2,borderDash:[5,4],pointRadius:3,tension:0},
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      interaction:{mode:"index",intersect:false},
+      plugins:{
+        legend:{display:false},
+        tooltip:{backgroundColor:"#1e293b",borderColor:"#334155",borderWidth:1,
+          titleFont:{family:"Plus Jakarta Sans",size:11},bodyFont:{family:"Plus Jakarta Sans",size:11},
+          callbacks:{label:function(c){
+            return " "+c.dataset.label+": R$ "+(c.parsed.y||0).toLocaleString("pt-BR",{minimumFractionDigits:0});
+          }}
+        }
+      },
+      scales:{
+        x:{grid:{display:false},ticks:{color:"#94a3b8",font:{family:"Plus Jakarta Sans",size:11,weight:"600"}}},
+        y:{display:false}
+      }
+    },
+    plugins:[{
+      id:"rotulos-mensal",
+      afterDatasetsDraw(chart){
+        // Não mostrar rótulos no mobile
+        if(window.innerWidth <= 900) return;
+        
+        var ctx = chart.ctx;
+        ctx.save();
+        ctx.font = "600 10px Plus Jakarta Sans";
+        ctx.textAlign = "center";
+        
+        chart.data.datasets.forEach(function(ds, i){
+          var meta = chart.getDatasetMeta(i);
+          if(!meta.hidden){
+            meta.data.forEach(function(bar, idx){
+              var val = ds.data[idx];
+              if(!val || val === 0) return;
+              
+              var x = bar.x;
+              
+              if(ds.type === "line"){
+                // Meta: rótulo acima da linha
+                ctx.fillStyle = "#f59e0b";
+                ctx.fillText(fmtNum(val), x, bar.y - 8);
+              } else {
+                // Barras: rótulo vertical
+                var yPos, valorExibir;
+                
+                // Se for projeção (dataset 1), mostrar TOTAL projetado
+                if(i === 1){
+                  ctx.fillStyle = "#64748b";
+                  yPos = bar.y + 10;  // Topo da barra de projeção
+                  // Total = realizado + projeção restante
+                  var realizado = chart.data.datasets[0].data[idx] || 0;
+                  valorExibir = realizado + val;
+                } else {
+                  ctx.fillStyle = "#fff";
+                  yPos = bar.base - 30;  // Base da barra realizada
+                  valorExibir = val;
+                }
+                
+                ctx.save();
+                ctx.translate(x, yPos);
+                ctx.rotate(-Math.PI/2);
+                ctx.fillText(fmtNum(valorExibir), 0, 0);
+                ctx.restore();
+              }
+            });
+          }
+        });
+        ctx.restore();
+      }
+    }]
+  });
+
+  renderChartAnual();
+}
+
+// Lista de carteiras no Card 4 com Gráfico Rosca
+console.log("CARTEIRAS data:", CARTEIRAS);
+console.log("ANO_ATUAL:", ANO_ATUAL);
+var carteirasAno = {};
+CARTEIRAS.filter(function(d){ return d.ano === ANO_ATUAL; }).forEach(function(d){
+  var cart = d.carteira || "OUTROS";
+  carteirasAno[cart] = (carteirasAno[cart] || 0) + d.valor;
+});
+console.log("carteirasAno:", carteirasAno);
+var totalCart = Object.values(carteirasAno).reduce(function(a,b){ return a+b; }, 0);
+console.log("totalCart:", totalCart);
+var carteirasOrdenadas = Object.entries(carteirasAno).sort(function(a,b){ return b[1]-a[1]; });
+
+// Separar maior carteira (rosca) das demais (lista)
+var maiorCarteira = carteirasOrdenadas[0] || ["--", 0];
+var outrasCarteiras = carteirasOrdenadas.slice(1);
+
+var percMaior = totalCart > 0 ? (maiorCarteira[1]/totalCart*100) : 0;
+var percOutras = 100 - percMaior;
+
+// Atualizar label central do gráfico
+document.getElementById("labelRoscaCart").innerHTML = 
+  '<div style="font-size:1.4rem;font-weight:800;color:#8b5cf6;font-family:Plus Jakarta Sans,sans-serif;line-height:1">' + percMaior.toFixed(0) + '%</div>' +
+  '<div style="font-size:.6rem;color:#94a3b8;font-weight:600;margin-top:2px;font-family:Plus Jakarta Sans,sans-serif">' + maiorCarteira[0] + '</div>';
+
+// Criar gráfico de rosca
+var ctxRosca = document.getElementById("chartRoscaCart").getContext("2d");
+new Chart(ctxRosca, {
+  type: "doughnut",
+  data: {
+    labels: [maiorCarteira[0], "Outras"],
+    datasets: [{
+      data: [percMaior, percOutras],
+      backgroundColor: ["#8b5cf6", "#e9d5ff"],
+      borderWidth: 0,
+      cutout: "75%"
+    }]
+  },
+  options: {
+    responsive: false,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { enabled: false }
+    }
+  }
+});
+
+// Preencher lista lateral com outras carteiras
+// Mapeamento de ícones por tipo de carteira
+var iconeCarteira = function(nome) {
+  var n = nome.toUpperCase();
+  if (n.includes("CARTAO") || n.includes("CARTÃO")) return '<i data-lucide="credit-card" style="width:14px;height:14px"></i>';
+  if (n.includes("DINHEIRO")) return '<i data-lucide="circle-dollar-sign" style="width:14px;height:14px"></i>';
+  if (n.includes("CHEQUE")) return '<i data-lucide="file-text" style="width:14px;height:14px"></i>';
+  if (n.includes("CREDIARIO") || n.includes("CREDIÁRIO")) return '<i data-lucide="calendar-clock" style="width:14px;height:14px"></i>';
+  if (n.includes("PIX")) return '<i data-lucide="smartphone" style="width:14px;height:14px"></i>';
+  if (n.includes("BOLETO")) return '<i data-lucide="receipt" style="width:14px;height:14px"></i>';
+  return '<i data-lucide="wallet" style="width:14px;height:14px"></i>';
+};
+
+var htmlLista = outrasCarteiras.map(function(item){
+  var nome = item[0];
+  var valor = item[1];
+  var perc = totalCart > 0 ? (valor/totalCart*100) : 0;
+  var icone = iconeCarteira(nome);
+  return (
+    '<div style="display:flex;align-items:center;gap:8px;padding:4px 0">' +
+      '<div style="font-size:.85rem;font-weight:800;color:#8b5cf6;font-family:Plus Jakarta Sans,sans-serif;min-width:35px;text-align:right">' + perc.toFixed(0) + '%</div>' +
+      '<div style="font-size:1rem">' + icone + '</div>' +
+      '<div style="font-size:.75rem;color:#475569;font-weight:600;font-family:Plus Jakarta Sans,sans-serif">' + nome + '</div>' +
+    '</div>'
+  );
+}).join("");
+
+document.getElementById("listaCarteiras").innerHTML = htmlLista;
+
+var chartModalCart = null;
+var cartDrillAno = null;
+
+function abrirModalCarteiras(){
+  // Pegar todas as carteiras únicas
+  var todasCarteiras = [...new Set(CARTEIRAS.map(function(d){ return d.carteira; }))];
+  
+  // Calcular % por carteira e ano (últimos 5)
+  var anos = ANUAL5.map(function(d){ return d.ano; });
+  var datasets = todasCarteiras.map(function(cart, idx){
+    var cores = ["#8b5cf6", "#06b6d4", "#f59e0b", "#10b981", "#ef4444", "#ec4899"];
+    var percPorAno = anos.map(function(ano){
+      var vendas = ANUAL5.find(function(d){ return d.ano === ano; });
+      var fatAno = vendas ? vendas.faturamento : 0;
+      var cartAno = CARTEIRAS.filter(function(d){ return d.ano === ano && d.carteira === cart; })
+        .reduce(function(sum, d){ return sum + d.valor; }, 0);
+      return fatAno > 0 ? (cartAno / fatAno * 100) : 0;
+    });
+    return {
+      label: cart,
+      data: percPorAno,
+      backgroundColor: cores[idx % cores.length],
+      borderRadius: 4
+    };
+  });
+  
+  document.getElementById("modal-cart-titulo").textContent = "Formas de Pagamento — % das Vendas";
+  document.getElementById("modal-cart-sub").textContent = "Últimos 5 anos · clique no ano para ver meses";
+  document.getElementById("modal-carteiras").classList.add("open");
+  
+  if(chartModalCart) chartModalCart.destroy();
+  chartModalCart = new Chart(document.getElementById("chartModalCart"), {
+    type: "bar",
+    data: { labels: anos, datasets: datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      onClick: function(evt, elements){
+        if(elements.length){
+          var idx = elements[0].index;
+          var ano = anos[idx];
+          mostrarMesesCart(ano);
+        }
+      },
+      plugins: {
+        legend: { display: true, position: "bottom",
+          labels: { color: "#64748b", font: { family: "Plus Jakarta Sans", size: 10 }, padding: 8 }
+        },
+        tooltip: {
+          callbacks: { label: function(c){ return " " + c.dataset.label + ": " + c.parsed.y.toFixed(1) + "%"; } }
+        }
+      },
+      scales: {
+        x: { stacked: true, ticks: { color: "#64748b", font: { family: "Plus Jakarta Sans", size: 11, weight: "600" } } },
+        y: { stacked: true, beginAtZero: true,
+          ticks: { callback: function(val){ return val + "%"; }, color: "#64748b", font: { family: "Plus Jakarta Sans", size: 11 } }
+        }
+      }
+    }
+  });
+}
+
+function mostrarMesesCart(ano){
+  cartDrillAno = ano;
+  var todasCarteiras = [...new Set(CARTEIRAS.map(function(d){ return d.carteira; }))];
+  var meses = MENSAL_R.filter(function(d){ return d.ano_mes.startsWith(ano); });
+  var labels = meses.map(function(d){
+    var m = parseInt(d.ano_mes.split("-")[1]);
+    return ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"][m-1];
+  });
+  
+  var datasets = todasCarteiras.map(function(cart, idx){
+    var cores = ["#8b5cf6", "#06b6d4", "#f59e0b", "#10b981", "#ef4444", "#ec4899"];
+    var percPorMes = labels.map(function(label, i){
+      var mes = meses[i];
+      var fatMes = mes ? mes.faturamento : 0;
+      var cartMes = CARTEIRAS.find(function(d){ return d.ano_mes === mes.ano_mes && d.carteira === cart; });
+      var cartVal = cartMes ? cartMes.valor : 0;
+      return fatMes > 0 ? (cartVal / fatMes * 100) : 0;
+    });
+    return {
+      label: cart,
+      data: percPorMes,
+      backgroundColor: cores[idx % cores.length],
+      borderRadius: 4
+    };
+  });
+  
+  document.getElementById("modal-cart-titulo").textContent = "Formas Pagamento " + ano + " — % Mensal";
+  document.getElementById("modal-cart-sub").textContent = "clique fora para voltar";
+  
+  if(chartModalCart) chartModalCart.destroy();
+  chartModalCart = new Chart(document.getElementById("chartModalCart"), {
+    type: "bar",
+    data: { labels: labels, datasets: datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: true, position: "bottom",
+          labels: { color: "#64748b", font: { family: "Plus Jakarta Sans", size: 10 }, padding: 8 }
+        },
+        tooltip: {
+          callbacks: { label: function(c){ return " " + c.dataset.label + ": " + c.parsed.y.toFixed(1) + "%"; } }
+        }
+      },
+      scales: {
+        x: { stacked: true, ticks: { color: "#64748b", font: { family: "Plus Jakarta Sans", size: 11, weight: "600" } } },
+        y: { stacked: true, beginAtZero: true,
+          ticks: { callback: function(val){ return val + "%"; }, color: "#64748b", font: { family: "Plus Jakarta Sans", size: 11 } }
+        }
+      }
+    }
+  });
+}
+
+function fecharModalCarteiras(){
+  document.getElementById("modal-carteiras").classList.remove("open");
+  if(chartModalCart){ chartModalCart.destroy(); chartModalCart = null; }
+  cartDrillAno = null;
+}
+
+document.getElementById("modal-carteiras").addEventListener("click", function(e){
+  if(e.target === this){
+    if(cartDrillAno){
+      abrirModalCarteiras();
+    } else {
+      fecharModalCarteiras();
+    }
+  }
+});
+
+// Modal Pedidos
+var chartModalPed = null;
+
+function abrirModalPedidos(){
+  // Obter dados mensais do ano atual
+  var mesesAno = MENSAL_R.filter(function(d){ return d.ano_mes.startsWith(ANO_ATUAL); });
+  var labels = mesesAno.map(function(d){
+    var m = parseInt(d.ano_mes.split("-")[1]);
+    return ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"][m-1];
+  });
+  
+  var pedidosAno = mesesAno.map(function(d){ return d.qtd_pedidos || 0; });
+  
+  // Calcular variação vs ano anterior
+  var variacoes = mesesAno.map(function(d){
+    var mesAnt = MENSAL_R.find(function(da){
+      var anoAnt = (parseInt(ANO_ATUAL) - 1).toString();
+      return da.ano_mes === anoAnt + "-" + d.ano_mes.split("-")[1];
+    });
+    if(mesAnt && mesAnt.qtd_pedidos > 0){
+      return ((d.qtd_pedidos - mesAnt.qtd_pedidos) / mesAnt.qtd_pedidos * 100);
+    }
+    return 0;
+  });
+  
+  document.getElementById("modal-ped-titulo").textContent = "Pedidos Mensais — " + ANO_ATUAL;
+  document.getElementById("modal-ped-sub").textContent = "Quantidade de pedidos por mês · variação vs ano anterior";
+  document.getElementById("modal-pedidos").classList.add("open");
+  
+  if(chartModalPed) chartModalPed.destroy();
+  chartModalPed = new Chart(document.getElementById("chartModalPed"), {
+    type: "bar",
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: ANO_ATUAL,
+          data: pedidosAno,
+          backgroundColor: function(ctx){
+            var grad = ctx.chart.ctx.createLinearGradient(0,0,0,200);
+            grad.addColorStop(0, "#06b6d4");
+            grad.addColorStop(1, "#3b82f6");
+            return grad;
+          },
+          borderRadius: 6,
+          borderSkipped: false
+        },
+        {
+          label: (parseInt(ANO_ATUAL) - 1).toString(),
+          data: mesesAno.map(function(d){
+            var anoAnt = (parseInt(ANO_ATUAL) - 1).toString();
+            var mesAnt = MENSAL_R.find(function(da){ return da.ano_mes === anoAnt + "-" + d.ano_mes.split("-")[1]; });
+            return mesAnt ? mesAnt.qtd_pedidos : 0;
+          }),
+          backgroundColor: "#fb923c",
+          borderRadius: 6,
+          borderSkipped: false
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          position: "bottom",
+          labels: {
+            color: "#64748b",
+            font: { family: "Plus Jakarta Sans", size: 11, weight: "600" },
+            padding: 10,
+            usePointStyle: true,
+            pointStyle: "circle"
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(c){
+              var val = c.parsed.y;
+              var fmt;
+              if(val >= 1e9) fmt = (val/1e9).toFixed(1).replace(".", ",") + "B";
+              else if(val >= 1e6) fmt = (val/1e6).toFixed(1).replace(".", ",") + "M";
+              else if(val >= 1e3){
+                var k = val / 1e3;
+                var str = k.toString();
+                var digits = str.split(".")[0].length;
+                if(digits === 1) fmt = k.toFixed(2).replace(".", ",") + "K";
+                else if(digits === 2) fmt = k.toFixed(1).replace(".", ",") + "K";
+                else fmt = Math.round(k) + "K";
+              } else {
+                fmt = val.toString();
+              }
+              return " " + c.dataset.label + ": " + fmt + " pedidos";
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          display: false,
+          beginAtZero: true,
+          grid: { display: false }
+        },
+        x: {
+          grid: { display: false },
+          ticks: {
+            color: "#64748b",
+            font: { family: "Plus Jakarta Sans", size: 11, weight: "600" }
+          }
+        }
+      }
+    },
+    plugins: [{
+      afterDatasetsDraw: function(chart){
+        var ctx = chart.ctx;
+        
+        // Função para formatar com K/M/B
+        function fmtKMB(val){
+          if(val >= 1e9) return (val/1e9).toFixed(1).replace(".", ",") + "B";
+          if(val >= 1e6) return (val/1e6).toFixed(1).replace(".", ",") + "M";
+          if(val >= 1e3){
+            var k = val / 1e3;
+            var str = k.toString();
+            var digits = str.split(".")[0].length;
+            if(digits === 1) return k.toFixed(2).replace(".", ",") + "K";
+            if(digits === 2) return k.toFixed(1).replace(".", ",") + "K";
+            return Math.round(k) + "K";
+          }
+          return val.toString();
+        }
+        
+        // Rótulos nos valores das barras do ano atual (dataset 0)
+        chart.data.datasets[0].data.forEach(function(valor, index){
+          if(valor > 0){
+            var meta = chart.getDatasetMeta(0);
+            var bar = meta.data[index];
+            ctx.fillStyle = "#fff";
+            ctx.font = "700 11px Plus Jakarta Sans";
+            ctx.textAlign = "center";
+            ctx.fillText(fmtKMB(valor), bar.x, bar.y + 15);
+          }
+        });
+        
+        // Rótulos nos valores das barras do ano anterior (dataset 1)
+        chart.data.datasets[1].data.forEach(function(valor, index){
+          if(valor > 0){
+            var meta = chart.getDatasetMeta(1);
+            var bar = meta.data[index];
+            ctx.fillStyle = "#fff";
+            ctx.font = "700 11px Plus Jakarta Sans";
+            ctx.textAlign = "center";
+            ctx.fillText(fmtKMB(valor), bar.x, bar.y + 15);
+          }
+        });
+        
+        // Variação % acima das barras do ano atual
+        variacoes.forEach(function(variacao, index){
+          var meta = chart.getDatasetMeta(0);
+          var bar = meta.data[index];
+          var cor = variacao >= 0 ? "#10b981" : "#ef4444";
+          var texto = (variacao >= 0 ? "+" : "") + variacao.toFixed(1) + "%";
+          ctx.fillStyle = cor;
+          ctx.font = "700 11px Plus Jakarta Sans";
+          ctx.textAlign = "center";
+          ctx.fillText(texto, bar.x, bar.y - 8);
+        });
+      }
+    }]
+  });
+}
+
+function fecharModalPedidos(){
+  document.getElementById("modal-pedidos").classList.remove("open");
+  if(chartModalPed){ chartModalPed.destroy(); chartModalPed = null; }
+}
+
+document.getElementById("modal-pedidos").addEventListener("click", function(e){
+  if(e.target === this) fecharModalPedidos();
+});
+
+// Modal Clientes (últimos 5 anos + drill-down mensal)
+var chartModalCli = null;
+var cliDrillAno = null;
+
+function abrirModalClientes(){
+  // Agrupar por ano (últimos 5)
+  var anosSet = {};
+  CLIENTES_MENSAL.forEach(function(d){
+    var ano = d.ano_mes.split("-")[0];
+    if(!anosSet[ano]) anosSet[ano] = 0;
+    anosSet[ano] += d.qtd_clientes;
+  });
+  
+  var anosOrdenados = Object.keys(anosSet).sort().slice(-5);
+  var qtdPorAno = anosOrdenados.map(function(ano){ return anosSet[ano]; });
+  
+  document.getElementById("modal-cli-titulo").textContent = "Clientes Únicos";
+  document.getElementById("modal-cli-sub").textContent = "Últimos 5 anos · clique no ano para ver meses";
+  document.getElementById("modal-clientes").classList.add("open");
+  
+  if(chartModalCli) chartModalCli.destroy();
+  chartModalCli = new Chart(document.getElementById("chartModalCli"), {
+    type: "bar",
+    data: {
+      labels: anosOrdenados,
+      datasets: [{
+        label: "Clientes",
+        data: qtdPorAno,
+        backgroundColor: "#10b981",
+        borderRadius: 6,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      onClick: function(evt, elements){
+        if(elements.length){
+          var idx = elements[0].index;
+          var ano = anosOrdenados[idx];
+          mostrarMesesCli(ano);
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(c){ return " " + c.parsed.y.toLocaleString("pt-BR") + " clientes"; }
+          }
+        }
+      },
+      scales: {
+        y: { display: false, beginAtZero: true, grid: { display: false } },
+        x: {
+          grid: { display: false },
+          ticks: { color: "#64748b", font: { family: "Plus Jakarta Sans", size: 11, weight: "600" } }
+        }
+      }
+    }
+  });
+}
+
+function mostrarMesesCli(ano){
+  cliDrillAno = ano;
+  var anoAnt = (parseInt(ano) - 1).toString();
+  
+  // Meses do ano selecionado
+  var mesesAno = CLIENTES_MENSAL.filter(function(d){ return d.ano_mes.startsWith(ano); });
+  var labels = mesesAno.map(function(d){
+    var m = parseInt(d.ano_mes.split("-")[1]);
+    return ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"][m-1];
+  });
+  
+  var cliAnoAtual = mesesAno.map(function(d){ return d.qtd_clientes; });
+  
+  // Ano anterior (mesmo mês)
+  var cliAnoAnt = mesesAno.map(function(d){
+    var mes = d.ano_mes.split("-")[1];
+    var mesAnt = CLIENTES_MENSAL.find(function(da){ return da.ano_mes === anoAnt + "-" + mes; });
+    return mesAnt ? mesAnt.qtd_clientes : 0;
+  });
+  
+  // Calcular variações
+  var variacoes = cliAnoAtual.map(function(val, i){
+    if(cliAnoAnt[i] > 0) return ((val - cliAnoAnt[i]) / cliAnoAnt[i] * 100);
+    return 0;
+  });
+  
+  document.getElementById("modal-cli-titulo").textContent = "Clientes " + ano + " — Mensal";
+  document.getElementById("modal-cli-sub").textContent = "vs " + anoAnt + " · clique fora para voltar";
+  
+  if(chartModalCli) chartModalCli.destroy();
+  chartModalCli = new Chart(document.getElementById("chartModalCli"), {
+    type: "bar",
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: ano,
+          data: cliAnoAtual,
+          backgroundColor: function(ctx){
+            var grad = ctx.chart.ctx.createLinearGradient(0,0,0,200);
+            grad.addColorStop(0, "#10b981");
+            grad.addColorStop(1, "#06b6d4");
+            return grad;
+          },
+          borderRadius: 6,
+          borderSkipped: false
+        },
+        {
+          label: anoAnt,
+          data: cliAnoAnt,
+          backgroundColor: "#fb923c",
+          borderRadius: 6,
+          borderSkipped: false
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          position: "bottom",
+          labels: { color: "#64748b", font: { family: "Plus Jakarta Sans", size: 11, weight: "600" }, padding: 10, usePointStyle: true, pointStyle: "circle" }
+        },
+        tooltip: {
+          callbacks: { label: function(c){ return " " + c.dataset.label + ": " + c.parsed.y.toLocaleString("pt-BR") + " clientes"; } }
+        }
+      },
+      scales: {
+        y: { display: false, beginAtZero: true, grid: { display: false } },
+        x: { grid: { display: false }, ticks: { color: "#64748b", font: { family: "Plus Jakarta Sans", size: 11, weight: "600" } } }
+      }
+    },
+    plugins: [{
+      afterDatasetsDraw: function(chart){
+        var ctx = chart.ctx;
+        function fmtKMB(val){
+          if(val >= 1e9) return (val/1e9).toFixed(1).replace(".", ",") + "B";
+          if(val >= 1e6) return (val/1e6).toFixed(1).replace(".", ",") + "M";
+          if(val >= 1e3){
+            var k = val / 1e3;
+            var str = k.toString();
+            var digits = str.split(".")[0].length;
+            if(digits === 1) return k.toFixed(2).replace(".", ",") + "K";
+            if(digits === 2) return k.toFixed(1).replace(".", ",") + "K";
+            return Math.round(k) + "K";
+          }
+          return val.toString();
+        }
+        
+        // Rótulos ano atual
+        chart.data.datasets[0].data.forEach(function(valor, index){
+          if(valor > 0){
+            var meta = chart.getDatasetMeta(0);
+            var bar = meta.data[index];
+            ctx.fillStyle = "#fff";
+            ctx.font = "700 11px Plus Jakarta Sans";
+            ctx.textAlign = "center";
+            ctx.fillText(fmtKMB(valor), bar.x, bar.y + 15);
+          }
+        });
+        
+        // Rótulos ano anterior
+        chart.data.datasets[1].data.forEach(function(valor, index){
+          if(valor > 0){
+            var meta = chart.getDatasetMeta(1);
+            var bar = meta.data[index];
+            ctx.fillStyle = "#fff";
+            ctx.font = "700 11px Plus Jakarta Sans";
+            ctx.textAlign = "center";
+            ctx.fillText(fmtKMB(valor), bar.x, bar.y + 15);
+          }
+        });
+        
+        // Variação % acima
+        variacoes.forEach(function(variacao, index){
+          var meta = chart.getDatasetMeta(0);
+          var bar = meta.data[index];
+          var cor = variacao >= 0 ? "#10b981" : "#ef4444";
+          var texto = (variacao >= 0 ? "+" : "") + variacao.toFixed(1) + "%";
+          ctx.fillStyle = cor;
+          ctx.font = "700 11px Plus Jakarta Sans";
+          ctx.textAlign = "center";
+          ctx.fillText(texto, bar.x, bar.y - 8);
+        });
+      }
+    }]
+  });
+}
+
+function fecharModalClientes(){
+  document.getElementById("modal-clientes").classList.remove("open");
+  if(chartModalCli){ chartModalCli.destroy(); chartModalCli = null; }
+  cliDrillAno = null;
+}
+
+document.getElementById("modal-clientes").addEventListener("click", function(e){
+  if(e.target === this){
+    if(cliDrillAno){
+      abrirModalClientes();
+    } else {
+      fecharModalClientes();
+    }
+  }
+});
+
+// Modal Ticket Médio (últimos 5 anos + drill-down mensal)
+var chartModalTkt = null;
+var tktDrillAno = null;
+
+function abrirModalTicket(){
+  // Calcular ticket médio por ano (últimos 5)
+  var anosData = {};
+  MENSAL_R.forEach(function(d){
+    var ano = d.ano_mes.split("-")[0];
+    if(!anosData[ano]) anosData[ano] = {fat: 0, ped: 0};
+    anosData[ano].fat += d.faturamento;
+    anosData[ano].ped += d.qtd_pedidos;
+  });
+  
+  var anosOrdenados = Object.keys(anosData).sort().slice(-5);
+  var ticketPorAno = anosOrdenados.map(function(ano){
+    var d = anosData[ano];
+    return d.ped > 0 ? d.fat / d.ped : 0;
+  });
+  
+  document.getElementById("modal-tkt-titulo").textContent = "Ticket Médio";
+  document.getElementById("modal-tkt-sub").textContent = "Últimos 5 anos · clique no ano para ver meses";
+  document.getElementById("modal-ticket").classList.add("open");
+  
+  if(chartModalTkt) chartModalTkt.destroy();
+  chartModalTkt = new Chart(document.getElementById("chartModalTkt"), {
+    type: "bar",
+    data: {
+      labels: anosOrdenados,
+      datasets: [{
+        label: "Ticket Médio",
+        data: ticketPorAno,
+        backgroundColor: "#f59e0b",
+        borderRadius: 6,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      onClick: function(evt, elements){
+        if(elements.length){
+          var idx = elements[0].index;
+          var ano = anosOrdenados[idx];
+          mostrarMesesTkt(ano);
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(c){
+              var val = c.parsed.y;
+              var fmt;
+              if(val >= 1e9) fmt = (val/1e9).toFixed(1).replace(".", ",") + "B";
+              else if(val >= 1e6) fmt = (val/1e6).toFixed(1).replace(".", ",") + "M";
+              else if(val >= 1e3){
+                var k = val / 1e3;
+                var str = k.toString();
+                var digits = str.split(".")[0].length;
+                if(digits === 1) fmt = k.toFixed(2).replace(".", ",") + "K";
+                else if(digits === 2) fmt = k.toFixed(1).replace(".", ",") + "K";
+                else fmt = Math.round(k) + "K";
+              } else {
+                fmt = val.toFixed(2).replace(".", ",");
+              }
+              return " R$ " + fmt;
+            }
+          }
+        }
+      },
+      scales: {
+        y: { display: false, beginAtZero: true, grid: { display: false } },
+        x: {
+          grid: { display: false },
+          ticks: { color: "#64748b", font: { family: "Plus Jakarta Sans", size: 11, weight: "600" } }
+        }
+      }
+    }
+  });
+}
+
+function mostrarMesesTkt(ano){
+  tktDrillAno = ano;
+  var anoAnt = (parseInt(ano) - 1).toString();
+  
+  var mesesAno = MENSAL_R.filter(function(d){ return d.ano_mes.startsWith(ano); });
+  var labels = mesesAno.map(function(d){
+    var m = parseInt(d.ano_mes.split("-")[1]);
+    return ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"][m-1];
+  });
+  
+  var tktAnoAtual = mesesAno.map(function(d){
+    return d.qtd_pedidos > 0 ? d.faturamento / d.qtd_pedidos : 0;
+  });
+  
+  var tktAnoAnt = mesesAno.map(function(d){
+    var mes = d.ano_mes.split("-")[1];
+    var mesAnt = MENSAL_R.find(function(da){ return da.ano_mes === anoAnt + "-" + mes; });
+    if(mesAnt && mesAnt.qtd_pedidos > 0) return mesAnt.faturamento / mesAnt.qtd_pedidos;
+    return 0;
+  });
+  
+  var variacoes = tktAnoAtual.map(function(val, i){
+    if(tktAnoAnt[i] > 0) return ((val - tktAnoAnt[i]) / tktAnoAnt[i] * 100);
+    return 0;
+  });
+  
+  document.getElementById("modal-tkt-titulo").textContent = "Ticket Médio " + ano + " — Mensal";
+  document.getElementById("modal-tkt-sub").textContent = "vs " + anoAnt + " · clique fora para voltar";
+  
+  if(chartModalTkt) chartModalTkt.destroy();
+  chartModalTkt = new Chart(document.getElementById("chartModalTkt"), {
+    type: "bar",
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: ano,
+          data: tktAnoAtual,
+          backgroundColor: function(ctx){
+            var grad = ctx.chart.ctx.createLinearGradient(0,0,0,200);
+            grad.addColorStop(0, "#06b6d4");
+            grad.addColorStop(1, "#3b82f6");
+            return grad;
+          },
+          borderRadius: 6,
+          borderSkipped: false
+        },
+        {
+          label: anoAnt,
+          data: tktAnoAnt,
+          backgroundColor: "#fb923c",
+          borderRadius: 6,
+          borderSkipped: false
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          position: "bottom",
+          labels: { color: "#64748b", font: { family: "Plus Jakarta Sans", size: 11, weight: "600" }, padding: 10, usePointStyle: true, pointStyle: "circle" }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(c){
+              var val = c.parsed.y;
+              var fmt;
+              if(val >= 1e9) fmt = (val/1e9).toFixed(1).replace(".", ",") + "B";
+              else if(val >= 1e6) fmt = (val/1e6).toFixed(1).replace(".", ",") + "M";
+              else if(val >= 1e3){
+                var k = val / 1e3;
+                var str = k.toString();
+                var digits = str.split(".")[0].length;
+                if(digits === 1) fmt = k.toFixed(2).replace(".", ",") + "K";
+                else if(digits === 2) fmt = k.toFixed(1).replace(".", ",") + "K";
+                else fmt = Math.round(k) + "K";
+              } else {
+                fmt = val.toFixed(2).replace(".", ",");
+              }
+              return " " + c.dataset.label + ": R$ " + fmt;
+            }
+          }
+        }
+      },
+      scales: {
+        y: { display: false, beginAtZero: true, grid: { display: false } },
+        x: { grid: { display: false }, ticks: { color: "#64748b", font: { family: "Plus Jakarta Sans", size: 11, weight: "600" } } }
+      }
+    },
+    plugins: [{
+      afterDatasetsDraw: function(chart){
+        var ctx = chart.ctx;
+        function fmtKMB(val){
+          if(val >= 1e9) return (val/1e9).toFixed(1).replace(".", ",") + "B";
+          if(val >= 1e6) return (val/1e6).toFixed(1).replace(".", ",") + "M";
+          if(val >= 1e3){
+            var k = val / 1e3;
+            var str = k.toString();
+            var digits = str.split(".")[0].length;
+            if(digits === 1) return k.toFixed(2).replace(".", ",") + "K";
+            if(digits === 2) return k.toFixed(1).replace(".", ",") + "K";
+            return Math.round(k) + "K";
+          }
+          return val.toFixed(0);
+        }
+        
+        chart.data.datasets[0].data.forEach(function(valor, index){
+          if(valor > 0){
+            var meta = chart.getDatasetMeta(0);
+            var bar = meta.data[index];
+            ctx.fillStyle = "#fff";
+            ctx.font = "700 11px Plus Jakarta Sans";
+            ctx.textAlign = "center";
+            ctx.fillText(fmtKMB(valor), bar.x, bar.y + 15);
+          }
+        });
+        
+        chart.data.datasets[1].data.forEach(function(valor, index){
+          if(valor > 0){
+            var meta = chart.getDatasetMeta(1);
+            var bar = meta.data[index];
+            ctx.fillStyle = "#fff";
+            ctx.font = "700 11px Plus Jakarta Sans";
+            ctx.textAlign = "center";
+            ctx.fillText(fmtKMB(valor), bar.x, bar.y + 15);
+          }
+        });
+        
+        variacoes.forEach(function(variacao, index){
+          var meta = chart.getDatasetMeta(0);
+          var bar = meta.data[index];
+          var cor = variacao >= 0 ? "#10b981" : "#ef4444";
+          var texto = (variacao >= 0 ? "+" : "") + variacao.toFixed(1) + "%";
+          ctx.fillStyle = cor;
+          ctx.font = "700 11px Plus Jakarta Sans";
+          ctx.textAlign = "center";
+          ctx.fillText(texto, bar.x, bar.y - 8);
+        });
+      }
+    }]
+  });
+}
+
+function fecharModalTicket(){
+  document.getElementById("modal-ticket").classList.remove("open");
+  if(chartModalTkt){ chartModalTkt.destroy(); chartModalTkt = null; }
+  tktDrillAno = null;
+}
+
+document.getElementById("modal-ticket").addEventListener("click", function(e){
+  if(e.target === this){
+    if(tktDrillAno){
+      abrirModalTicket();
+    } else {
+      fecharModalTicket();
+    }
+  }
+});
+
+lucide.createIcons();
+aplicarFiltros();
+</script>
+</body></html>

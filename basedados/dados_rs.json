@@ -1,0 +1,274 @@
+{
+  "atualizado_em": "21/05/2026 17:58",
+  "mensal": [
+    {
+      "ano_mes": "2025-03",
+      "faturamento": 422369.5,
+      "custo": 242094.56,
+      "qtd_pedidos": 1777,
+      "qtd_itens": 3354.4,
+      "margem": 180274.94,
+      "margem_pct": 42.7
+    },
+    {
+      "ano_mes": "2025-04",
+      "faturamento": 426433.9,
+      "custo": 248797.79,
+      "qtd_pedidos": 1669,
+      "qtd_itens": 3215.2,
+      "margem": 177636.11,
+      "margem_pct": 41.7
+    },
+    {
+      "ano_mes": "2025-05",
+      "faturamento": 406528.8,
+      "custo": 238509.96,
+      "qtd_pedidos": 1723,
+      "qtd_itens": 3269.9,
+      "margem": 168018.84,
+      "margem_pct": 41.3
+    },
+    {
+      "ano_mes": "2025-06",
+      "faturamento": 72328.95,
+      "custo": 45563.2,
+      "qtd_pedidos": 239,
+      "qtd_itens": 478.5,
+      "margem": 26765.75,
+      "margem_pct": 37.0
+    },
+    {
+      "ano_mes": "2025-07",
+      "faturamento": 800022.72,
+      "custo": 468651.51,
+      "qtd_pedidos": 3188,
+      "qtd_itens": 6116.9,
+      "margem": 331371.21,
+      "margem_pct": 41.4
+    },
+    {
+      "ano_mes": "2025-08",
+      "faturamento": 475478.42,
+      "custo": 264362.08,
+      "qtd_pedidos": 1867,
+      "qtd_itens": 3511.5,
+      "margem": 211116.34,
+      "margem_pct": 44.4
+    },
+    {
+      "ano_mes": "2025-09",
+      "faturamento": 447678.09,
+      "custo": 251016.26,
+      "qtd_pedidos": 1705,
+      "qtd_itens": 3145.4,
+      "margem": 196661.83,
+      "margem_pct": 43.9
+    },
+    {
+      "ano_mes": "2025-10",
+      "faturamento": 400706.65,
+      "custo": 227424.87,
+      "qtd_pedidos": 1728,
+      "qtd_itens": 3233.2,
+      "margem": 173281.78,
+      "margem_pct": 43.2
+    },
+    {
+      "ano_mes": "2025-11",
+      "faturamento": 412879.86,
+      "custo": 240831.1,
+      "qtd_pedidos": 1594,
+      "qtd_itens": 3087.8,
+      "margem": 172048.76,
+      "margem_pct": 41.7
+    },
+    {
+      "ano_mes": "2025-12",
+      "faturamento": 418475.21,
+      "custo": 244618.71,
+      "qtd_pedidos": 1869,
+      "qtd_itens": 3696.2,
+      "margem": 173856.5,
+      "margem_pct": 41.5
+    },
+    {
+      "ano_mes": "2026-01",
+      "faturamento": 486135.92,
+      "custo": 274881.89,
+      "qtd_pedidos": 2052,
+      "qtd_itens": 3972.1,
+      "margem": 211254.03,
+      "margem_pct": 43.5
+    },
+    {
+      "ano_mes": "2026-02",
+      "faturamento": 430559.66,
+      "custo": 231278.95,
+      "qtd_pedidos": 1712,
+      "qtd_itens": 3252.7,
+      "margem": 199280.71,
+      "margem_pct": 46.3
+    },
+    {
+      "ano_mes": "2026-03",
+      "faturamento": 616662.95,
+      "custo": 332740.09,
+      "qtd_pedidos": 2235,
+      "qtd_itens": 4271.1,
+      "margem": 283922.86,
+      "margem_pct": 46.0
+    },
+    {
+      "ano_mes": "2026-04",
+      "faturamento": 590634.53,
+      "custo": 325181.66,
+      "qtd_pedidos": 2038,
+      "qtd_itens": 3898.7,
+      "margem": 265452.87,
+      "margem_pct": 44.9
+    },
+    {
+      "ano_mes": "2026-05",
+      "faturamento": 223416.71,
+      "custo": 130512.77,
+      "qtd_pedidos": 799,
+      "qtd_itens": 1565.0,
+      "margem": 92903.94,
+      "margem_pct": 41.6
+    }
+  ],
+  "vendedores": [
+    {
+      "vendedor_id": 25,
+      "faturamento": 1765151.79,
+      "custo": 1359609.53,
+      "qtd_pedidos": 2394,
+      "margem": 405542.26,
+      "margem_pct": 23.0
+    },
+    {
+      "vendedor_id": 11,
+      "faturamento": 896182.21,
+      "custo": 337946.49,
+      "qtd_pedidos": 5152,
+      "margem": 558235.72,
+      "margem_pct": 62.3
+    },
+    {
+      "vendedor_id": 10,
+      "faturamento": 829606.26,
+      "custo": 635166.9,
+      "qtd_pedidos": 1458,
+      "margem": 194439.36,
+      "margem_pct": 23.4
+    },
+    {
+      "vendedor_id": 19,
+      "faturamento": 757986.68,
+      "custo": 303915.98,
+      "qtd_pedidos": 5133,
+      "margem": 454070.7,
+      "margem_pct": 59.9
+    },
+    {
+      "vendedor_id": 7,
+      "faturamento": 601582.3,
+      "custo": 239982.49,
+      "qtd_pedidos": 3991,
+      "margem": 361599.81,
+      "margem_pct": 60.1
+    },
+    {
+      "vendedor_id": 16,
+      "faturamento": 371490.64,
+      "custo": 148921.66,
+      "qtd_pedidos": 1984,
+      "margem": 222568.98,
+      "margem_pct": 59.9
+    },
+    {
+      "vendedor_id": 32,
+      "faturamento": 309753.43,
+      "custo": 120670.97,
+      "qtd_pedidos": 1690,
+      "margem": 189082.46,
+      "margem_pct": 61.0
+    },
+    {
+      "vendedor_id": 34,
+      "faturamento": 282125.58,
+      "custo": 206330.55,
+      "qtd_pedidos": 478,
+      "margem": 75795.03,
+      "margem_pct": 26.9
+    },
+    {
+      "vendedor_id": 28,
+      "faturamento": 220479.04,
+      "custo": 101661.43,
+      "qtd_pedidos": 1253,
+      "margem": 118817.61,
+      "margem_pct": 53.9
+    },
+    {
+      "vendedor_id": 14,
+      "faturamento": 102982.61,
+      "custo": 45873.72,
+      "qtd_pedidos": 489,
+      "margem": 57108.89,
+      "margem_pct": 55.5
+    }
+  ],
+  "produtos": [
+    {
+      "produto_id": 1484,
+      "faturamento": 358981.28,
+      "qtd": 1344.0
+    },
+    {
+      "produto_id": 1469,
+      "faturamento": 186704.3,
+      "qtd": 3631.0
+    },
+    {
+      "produto_id": 3075,
+      "faturamento": 167707.87,
+      "qtd": 526.0
+    },
+    {
+      "produto_id": 1466,
+      "faturamento": 163617.86,
+      "qtd": 12469.0
+    },
+    {
+      "produto_id": 10704,
+      "faturamento": 160295.82,
+      "qtd": 367.0
+    },
+    {
+      "produto_id": 3148,
+      "faturamento": 149349.1,
+      "qtd": 446.0
+    },
+    {
+      "produto_id": 3463,
+      "faturamento": 146887.32,
+      "qtd": 382.0
+    },
+    {
+      "produto_id": 3924,
+      "faturamento": 136282.15,
+      "qtd": 283.0
+    },
+    {
+      "produto_id": 1485,
+      "faturamento": 129320.67,
+      "qtd": 694.0
+    },
+    {
+      "produto_id": 2410,
+      "faturamento": 115793.94,
+      "qtd": 243.0
+    }
+  ]
+}

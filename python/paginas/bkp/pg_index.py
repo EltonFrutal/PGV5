@@ -1,0 +1,231 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+pg_index.py — Gera index.html a partir de Configuracao.xlsx
+"""
+
+import openpyxl
+import hashlib
+import json
+
+def h(senha):
+    """Hash SHA-256 de uma senha."""
+    return hashlib.sha256(str(senha).encode()).hexdigest()
+
+def ler_configuracao(caminho_excel):
+    """Lê Configuracao.xlsx e retorna usuarios e empresas."""
+    wb = openpyxl.load_workbook(caminho_excel)
+    
+    # Ler USUARIOS
+    ws_user = wb['usuario']
+    usuarios = []
+    for row in ws_user.iter_rows(min_row=2, values_only=True):
+        if row[0]:
+            usuarios.append({
+                'id': row[0],
+                'email': row[1],
+                'senha': h(row[2]),
+                'nome': row[1].split('@')[0].title(),
+                'perfil': row[3],
+                'foto': f"imagem/fotos/{row[5]}.jpg" if row[5] else None
+            })
+    
+    # Ler EMPRESAS (apenas ativas)
+    ws_emp = wb['empresa']
+    empresas = []
+    for row in ws_emp.iter_rows(min_row=2, values_only=True):
+        if row[0] and str(row[2]).lower() == 'sim':
+            empresas.append({
+                'id': row[0],
+                'nome': row[1],
+                'arquivo': f"{row[1].lower().replace(' ', '_')}.html",
+                'logo': f"imagem/logos/{row[4]}.png" if row[4] else None,
+                'cor': '#6366f1' if 'RS' in row[1] else '#10b981'
+            })
+    
+    # Ler USUARIOEMPRESA (permissões)
+    ws_useremp = wb['usuarioempresa']
+    usuario_empresas = []
+    for row in ws_useremp.iter_rows(min_row=2, values_only=True):
+        if row[0]:
+            usuario_empresas.append({
+                'usuario_id': row[0],
+                'organizacao_id': row[2]
+            })
+    
+    # Mapear empresas por usuário
+    emp_map = {e['id']: e['nome'] for e in empresas}
+    for u in usuarios:
+        u['empresas'] = [
+            emp_map[ue['organizacao_id']]
+            for ue in usuario_empresas
+            if ue['usuario_id'] == u['id'] and ue['organizacao_id'] in emp_map
+        ]
+    
+    return usuarios, empresas
+
+def gerar_index_html(usuarios, empresas):
+    """Gera HTML do index."""
+    
+    usuarios_js = json.dumps(usuarios, ensure_ascii=False)
+    empresas_js = json.dumps(empresas, ensure_ascii=False)
+    
+    html = f'''<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>PGV5 — Painel Gerencial</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{{box-sizing:border-box;margin:0;padding:0;}}
+html,body{{height:100%;margin:0;}}
+body{{background:#e2e8f0;color:#1e293b;font-family:'DM Sans',sans-serif;min-height:100vh;}}
+#tela-login{{display:flex;align-items:center;justify-content:center;min-height:100vh;width:100%;}}
+#tela-empresas{{display:none;min-height:100vh;}}
+.login-container{{width:100%;max-width:420px;padding:20px;}}
+.login-wrap{{background:#fff;border-radius:22px;box-shadow:0 4px 6px -1px rgba(0,0,0,.07),0 20px 60px -10px rgba(0,0,0,.1);overflow:hidden;}}
+.login-top{{background:linear-gradient(135deg,#6366f1 0%,#8b5cf6 100%);padding:42px 40px 54px;position:relative;}}
+.login-top::after{{content:"";position:absolute;bottom:-1px;left:0;right:0;height:32px;background:#fff;border-radius:22px 22px 0 0;}}
+.login-logo{{font-size:2.8rem;font-weight:800;color:#fff;letter-spacing:-.05em;}}
+.login-logo em{{color:#c7d2fe;font-style:normal;}}
+.login-tag{{font-size:.75rem;color:rgba(255,255,255,.6);font-weight:500;letter-spacing:.05em;text-transform:uppercase;margin-top:5px;}}
+.login-form{{padding:28px 40px 36px;}}
+.field{{margin-bottom:16px;}}
+.field label{{display:block;font-size:.68rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;}}
+.field input{{width:100%;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:9px;color:#1e293b;font-family:'DM Sans',sans-serif;font-size:.92rem;font-weight:500;padding:12px 14px;outline:none;transition:all .2s;}}
+.field input:focus{{border-color:#6366f1;box-shadow:0 0 0 3px rgba(99,102,241,.12);background:#fff;}}
+.btn-entrar{{width:100%;background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;border-radius:9px;color:#fff;font-family:'DM Sans',sans-serif;font-size:.92rem;font-weight:700;padding:13px;cursor:pointer;margin-top:4px;box-shadow:0 4px 14px rgba(99,102,241,.3);transition:opacity .2s;}}
+.btn-entrar:hover{{opacity:.9;}}
+.login-erro{{background:#fef2f2;border:1.5px solid #fecaca;border-radius:7px;color:#dc2626;font-size:.78rem;font-weight:600;padding:10px 14px;text-align:center;margin-top:12px;display:none;}}
+.login-footer{{font-size:.68rem;color:#cbd5e1;text-align:center;margin-top:18px;}}
+.hdr-main{{background:#000;border-bottom:1px solid #1e293b;padding:0 28px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.3);}}
+.hdr-menu-btn{{background:transparent;border:1.5px solid #334155;border-radius:8px;color:#94a3b8;padding:8px;cursor:pointer;text-decoration:none;transition:all .2s;display:flex;align-items:center;justify-content:center;width:38px;height:38px;}}
+.hdr-menu-btn:hover{{border-color:#fff;color:#fff;background:rgba(255,255,255,.1);}}
+.hdr-right{{display:flex;align-items:center;gap:12px;}}
+.hdr-avatar{{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;color:#fff;overflow:hidden;}}
+.btn-logoff{{background:transparent;border:1.5px solid #334155;border-radius:7px;color:#94a3b8;font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:600;padding:8px 12px;cursor:pointer;transition:all .2s;display:flex;align-items:center;}}
+.btn-logoff:hover{{border-color:#ef4444;color:#ef4444;background:rgba(239,68,68,.1);}}
+.main-content{{padding:28px;}}
+.sec-titulo{{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#94a3b8;margin-bottom:16px;}}
+.emp-grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:20px;max-width:1000px;}}
+.emp-card{{background:#fff;border:1.5px solid #f1f5f9;border-radius:16px;padding:32px 20px;cursor:pointer;text-decoration:none;display:flex;flex-direction:column;align-items:center;text-align:center;transition:all .25s;box-shadow:0 1px 3px rgba(0,0,0,.06);}}
+.emp-card:hover{{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.1);}}
+.emp-icone{{width:64px;height:64px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;}}
+.emp-nome-card{{font-size:.9rem;font-weight:700;color:#1e293b;}}
+@keyframes fadeUp{{from{{opacity:0;transform:translateY(14px)}}to{{opacity:1;transform:translateY(0)}}}}
+.emp-card{{animation:fadeUp .4s ease both;}}
+</style>
+</head>
+<body>
+<div id="tela-login">
+  <div class="login-container">
+    <div class="login-wrap" style="animation:fadeUp .4s ease both;">
+      <div class="login-top">
+        <div class="login-logo">PGV<em>5</em></div>
+        <div class="login-tag">Painel Gerencial — Acesso Restrito</div>
+      </div>
+      <div class="login-form">
+        <div class="field"><label>E-mail</label><input type="email" id="inp-email" placeholder="seu@email.com" onkeydown="if(event.key==='Enter')login()"></div>
+        <div class="field"><label>Senha</label><input type="password" id="inp-senha" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()"></div>
+        <button class="btn-entrar" onclick="login()">Entrar no Painel</button>
+        <div class="login-erro" id="login-erro">E-mail ou senha incorretos.</div>
+        <div class="login-footer">PGV5 © 2026 · Consys</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="tela-empresas">
+  <header class="hdr-main">
+    <div style="display:flex;align-items:center;gap:16px;">
+      <button class="hdr-menu-btn" style="opacity:0.3;pointer-events:none;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </button>
+      <img src="imagem/logos/sistema.png" alt="PGV5" style="height:34px" onerror="this.style.display='none'">
+      <span style="color:#fff;font-weight:700;font-size:1.1rem;letter-spacing:-.02em">Painel Gerencial</span>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-avatar" id="hdr-avatar">?</div>
+      <button class="btn-logoff" id="btn-logout">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+        <span style="margin-left:6px">Sair</span>
+      </button>
+    </div>
+  </header>
+  <div class="main-content">
+    <div class="sec-titulo">Selecione a Organização</div>
+    <div class="emp-grid" id="emp-grid"></div>
+  </div>
+</div>
+<script>
+var USUARIOS={usuarios_js};
+var EMPRESAS={empresas_js};
+async function sha256(s){{const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,"0")).join("");}}
+async function login(){{var email=document.getElementById("inp-email").value.trim().toLowerCase();var senha=document.getElementById("inp-senha").value;var hash=await sha256(senha);var user=USUARIOS.find(u=>u.email.toLowerCase()===email&&u.senha===hash);if(!user){{document.getElementById("login-erro").style.display="block";return;}}sessionStorage.setItem("pgv5",JSON.stringify(user));mostrarEmpresas(user);}}
+function mostrarEmpresas(user){{
+  document.getElementById("tela-login").style.display="none";
+  document.getElementById("tela-empresas").style.display="block";
+  var avatar=document.getElementById("hdr-avatar");
+  if(user.foto){{avatar.innerHTML='<img src="'+user.foto+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';}}
+  else{{avatar.textContent=user.nome.charAt(0).toUpperCase();}}
+  document.getElementById("btn-logout").addEventListener("click",function(){{sessionStorage.removeItem("pgv5");location.reload();}});
+  
+  var lista=EMPRESAS.filter(e=>user.empresas.includes(e.nome));
+  document.getElementById("emp-grid").innerHTML=lista.map(function(e,i){{
+    var logo=e.logo?'<img src="'+e.logo+'" style="width:100%;height:100%;object-fit:contain">':'<div style="font-size:2rem">🏢</div>';
+    return'<a class="emp-card" href="'+e.arquivo+'" style="animation-delay:'+(i*.08)+'s">'+
+      '<div class="emp-icone" style="background:'+e.cor+'15;">'+logo+'</div>'+
+      '<div class="emp-nome-card">'+e.nome+'</div></a>';
+  }}).join("");
+}}
+window.addEventListener("DOMContentLoaded",function(){{
+  // Modo DEBUG: index.html?debug=true
+  if(window.location.search.includes('debug=true')){{
+    var user=USUARIOS[0];
+    sessionStorage.setItem("pgv5",JSON.stringify(user));
+    mostrarEmpresas(user);
+    return;
+  }}
+  var s=sessionStorage.getItem("pgv5");
+  if(s)mostrarEmpresas(JSON.parse(s));
+}});
+</script>
+</body>
+</html>'''
+    
+    return html
+
+def gerar(empresas_config):
+    """Gera HTML do index a partir da config de empresas."""
+    
+    # Ler Excel
+    excel_path = r"G:\Meu Drive\Consys\PainelGerencial\pgv5\configuracao.xlsx"
+    usuarios, empresas = ler_configuracao(excel_path)
+    
+    return gerar_index_html(usuarios, empresas)
+
+def main():
+    print("="*60)
+    print("  Gerando index.html de Configuracao.xlsx")
+    print("="*60)
+    
+    excel_path = r"G:\Meu Drive\Consys\PainelGerencial\pgv5\configuracao.xlsx"
+    output_path = r"G:\Meu Drive\Consys\PainelGerencial\pgv5\index.html"
+    
+    print(f"\n[1/2] Lendo {excel_path}...")
+    usuarios, empresas = ler_configuracao(excel_path)
+    print(f"      ✔ {len(usuarios)} usuários")
+    print(f"      ✔ {len(empresas)} organizações ativas")
+    
+    print(f"\n[2/2] Gerando index.html...")
+    html = gerar_index_html(usuarios, empresas)
+    
+    with open(output_path, 'w', encoding='utf-8') as f:
+        f.write(html)
+    
+    print(f"      ✔ {output_path}")
+    print("\n" + "="*60)
+    print("  Pronto!")
+    print("="*60)
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,54 @@
+# ============================================================
+#  .gitignore — PGV5
+# ============================================================
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+*.egg-info/
+dist/
+build/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+
+# Dados sensíveis (NÃO subir senhas reais!)
+# configuracao.xlsx  # Descomente se não quiser subir
+
+# Backups
+BKP/
+*.bak
+*.backup
+
+# Documentação temporária
+IMPLEMENTACAO_LOGIN.md
+RESTAURACAO_VENDAS_DASH.md
+
+# Arquivos gerados (HTMLs gerados pelo script)
+# Comente as linhas abaixo se quiser subir os HTMLs gerados
+# index.html
+# empresas.html
+# permissoes.json
+# manifest.json
+# empresa/
+
+# Imagens grandes (opcional - descomente se quiser ignorar imagens)
+# imagem/fotos/*.jpg
+# imagem/fotos/*.png
