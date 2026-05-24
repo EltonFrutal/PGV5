@@ -48,20 +48,26 @@ def main():
     # ── 2.1. GERAR MANIFEST.JSON ───────────────────────────
     print("\n[2.1/6] Gerando manifest.json...")
     manifest = {
-        "name": "PGV5 - Painel Gerencial",
-        "short_name": "PGV5",
-        "description": "Painel Gerencial de Vendas",
-        "start_url": "/index.html",
+        "name": "Painel Gerencial",
+        "short_name": "Painel Gerencial",
+        "description": "Sistema de Gestão Empresarial",
+        "start_url": "./index.html",
         "display": "standalone",
         "background_color": "#ffffff",
         "theme_color": "#000000",
         "orientation": "portrait-primary",
         "icons": [
             {
-                "src": "imagem/logos/sistema.png",
+                "src": "./imagem/logos/sistema.png",
+                "sizes": "192x192",
+                "type": "image/png",
+                "purpose": "any"
+            },
+            {
+                "src": "./imagem/logos/sistema.png",
                 "sizes": "512x512",
                 "type": "image/png",
-                "purpose": "any maskable"
+                "purpose": "maskable"
             }
         ]
     }
