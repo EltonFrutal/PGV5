@@ -103,10 +103,10 @@ def gerar(empresa, permissoes):
 <title>""" + nome_empresa + """ &mdash; PGV5</title>
 
 <!-- Favicon e ícones -->
-<link rel="icon" type="image/png" sizes="32x32" href="../imagem/logos/sistema.png">
-<link rel="icon" type="image/png" sizes="16x16" href="../imagem/logos/sistema.png">
-<link rel="apple-touch-icon" sizes="180x180" href="../imagem/logos/sistema.png">
-<link rel="manifest" href="../manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="../../imagem/logos/sistema.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../../imagem/logos/sistema.png">
+<link rel="apple-touch-icon" sizes="180x180" href="../../imagem/logos/sistema.png">
+<link rel="manifest" href="../../manifest.json">
 <meta name="theme-color" content="#000000">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -176,7 +176,7 @@ main{padding:22px 28px 48px;max-width:1000px;margin:0 auto;}
   
   // Carregar permissões do JSON
   try {
-    const response = await fetch('/permissoes.json');
+    const response = await fetch('../../permissoes.json');
     const permissoes = await response.json();
     const chave = usuarioId + '_' + empresaId;
     const userPerms = permissoes[chave];
